@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Jun 07 19:49:55 IDT 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0155-2bc5-3f44-00000bff8a00 
+on database directory C:\Users\administrator.000\git\BioProg2\db with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/administrator.000/Desktop/finalProject/code/jar_files/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_91-b14
+user.dir=C:\Users\administrator.000\git\BioProg2
+os.name=Windows 8.1
+os.arch=amd64
+os.version=6.3
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

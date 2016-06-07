@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/administrator.000/Desktop/finalProject/code/jar_files/commons-csv-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/administrator.000/Desktop/finalProject/code/jar_files/derby.jar"/>
+	<classpathentry kind="lib" path="C:/Users/administrator.000/Desktop/finalProject/code/jar_files/eclipselink.jar"/>
+	<classpathentry kind="lib" path="C:/Users/administrator.000/Desktop/finalProject/code/jar_files/javax.persistence-2.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/administrator.000/Desktop/finalProject/code/jar_files/jsoup-1.9.1.jar"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
