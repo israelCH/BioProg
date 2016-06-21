@@ -42,8 +42,7 @@ public class Entrez {
 		String queryStr = entrezSearchURL + buildQuery(query) + "&rettype=uilist";
 		System.out.println("Query URL: " + queryStr);
 		
-		DataInputStream dataIn= new DataInputStream(
-				new URL(queryStr).openStream());
+		DataInputStream dataIn= new DataInputStream(new URL(queryStr).openStream());
 		
 		InputStreamReader dataStr = new InputStreamReader(dataIn);
 		
@@ -80,7 +79,8 @@ public class Entrez {
 	private static String buildQuery(Query query){
 		
 		if ((query.getDataBase().getType().equals(DBType.PUBMED)) ||
-		    (query.getDataBase().getType().equals(DBType.PUBMED_CENTRAL))) {
+		    (query.getDataBase().getType().equals(DBType.PUBMED_CENTRAL)) ||
+		    (query.getDataBase().getType().equals(DBType.MeSH)) ) {
 			
 			String queryStr = "db=" + query.getDataBase().getPath();
 			

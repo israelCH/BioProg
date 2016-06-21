@@ -73,7 +73,7 @@ public class Client {
 		query.setDatabase(DBType.PUBMED);
 		query.addId("23371018");
 		query.addId("10227670");
-		query.setSearchType(SearchType.FETCH);	
+		query.setSearchType(SearchType.FETCH);
 		
 		// Calling Entrez
 		Document xmlDocs = Entrez.callEntrez(query);
@@ -104,7 +104,8 @@ public class Client {
 		*/
 		
 		Query query2 = new Query();
-		query2.setDatabase(DBType.PUBMED);
+		query2.setDatabase(DBType.MeSH);
+		//query2.setDatabase(DBType.PUBMED);
 		query2.addTerm("breast");
 		query2.addTerm("cancer");
 		query2.addField(SearchFields.JOURNAL,          "science");

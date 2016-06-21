@@ -13,7 +13,7 @@ public class DataBase {
 	
 	public enum DBType {
 		PUBMED, PUBMED_CENTRAL, 
-		MALA_CARDS, BIO_MODELS;
+		MALA_CARDS, BIO_MODELS, MeSH;
 	}
 	
 	private DBType _dbType;
@@ -25,10 +25,9 @@ public class DataBase {
 	public String getPath(){
 		if      (_dbType.equals(DBType.PUBMED))         {return "pubmed";}
 		else if (_dbType.equals(DBType.PUBMED_CENTRAL)) {return "pmc";   }
-		else if (_dbType.equals(DBType.MALA_CARDS))     {return 
-				"http://malacards.org/search/results/"; }
-		else if (_dbType.equals(DBType.BIO_MODELS))		{return 
-				"http://www.ebi.ac.uk/biomodels-main/";		}
+		else if (_dbType.equals(DBType.MeSH)) 			{return "mesh";   }
+		else if (_dbType.equals(DBType.MALA_CARDS))     {return "http://malacards.org/search/results/"; }
+		else if (_dbType.equals(DBType.BIO_MODELS))		{return "http://www.ebi.ac.uk/biomodels-main/";		}
 		else return null;
 	}
 	
