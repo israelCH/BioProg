@@ -80,6 +80,8 @@ public class Entrez {
 		
 		if ((query.getDataBase().getType().equals(DBType.PUBMED)) ||
 		    (query.getDataBase().getType().equals(DBType.PUBMED_CENTRAL)) ||
+		    (query.getDataBase().getType().equals(DBType.NLM_catalog)) ||
+		    (query.getDataBase().getType().equals(DBType.SNP)) ||
 		    (query.getDataBase().getType().equals(DBType.MeSH)) ) {
 			
 			String queryStr = "db=" + query.getDataBase().getPath();
@@ -91,7 +93,8 @@ public class Entrez {
 			if (!_ids.isEmpty()){
 				queryStr += "&id=";
 				
-				for (int i = 0; i < _ids.size() - 1; i++)
+				for (int i = 0; i < 2 ; i++)
+					//for (int i = 0; i < _ids.size() - 1; i++)
 					queryStr += _ids.get(i) + ",";
 				queryStr +=   _ids.get(_ids.size()-1);
 			}
