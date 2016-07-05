@@ -104,17 +104,48 @@ public class Client {
 		*/
 		
 		Query query2 = new Query();
-		query2.setDatabase(DBType.MeSH);
+		query2.setDatabase(DBType.SNP);
 		//query2.setDatabase(DBType.PUBMED);
 		query2.addTerm("breast");
 		query2.addTerm("cancer");
-		query2.addField(SearchFields.JOURNAL,          "science");
-		query2.addField(SearchFields.PUBLICATION_DATA, "2009"   );
+		//query2.addField(SearchFields.JOURNAL,          "science");
+		//query2.addField(SearchFields.PUBLICATION_DATA, "2009"   );
 		query2.setSearchType(SearchType.SEARCH);
 		List<String> results = Entrez.searchEntrez(query2);
 		
 		for (String result: results)
 			System.out.println(result);
+		
+		Query Fquery = new Query();
+		Fquery.setDatabase(DBType.SNP);
+		for (String result: results)
+		Fquery.addId(result);
+		Fquery.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		Document FxmlDocs = Entrez.callEntrez(Fquery);
+		//String  FxmlDocs = Entrez.callEntrez(Fquery);
+
+		// Parse answer into a list of articles
+		PubmedParser Fparser = new PubmedParser(FxmlDocs);
+		Fparser.parse();
+		List<Article> Farticles = Fparser.getArticles();
+		
+		for (Article article: Farticles){
+			persistAgent.PersistObject(article);
+		}
+		
+		// print persisted articles
+		persistAgent.showObjects(Article.ENTITY_NAME);
+		
+		// get persisted articles back and print their abstracts from files
+		List<Persistable> FarticlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
+		for (int i = 0; i < FarticlesPer.size(); i++){
+			Article article = (Article) FarticlesPer.get(i);
+			System.out.println(article.getAbstract());
+			System.out.println("---------------------------------------");
+		}
+
 		
 		/*--------------------------------------------------------------------------------
 	     * Example 3: Retrieving diseases from MalaCards database
