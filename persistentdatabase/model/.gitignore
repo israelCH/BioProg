@@ -3,3 +3,6 @@
 /Disease.class
 /Model.class
 /Persistable.class
+/Book.class
+/Author.class
+/BookAuthor.class

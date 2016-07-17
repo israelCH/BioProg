@@ -69,6 +69,7 @@ public class Client {
 		 *--------------------------------------------------------------------------------
 		*/
 		
+		/*---
 		Query query = new Query();
 		query.setDatabase(DBType.PUBMED);
 		query.addId("23371018");
@@ -97,6 +98,7 @@ public class Client {
 			System.out.println(article.getAbstract());
 			System.out.println("---------------------------------------");
 		}
+		----*/
 		
 		/*--------------------------------------------------------------------------------
 		 * Example 2: searching articles in pubmed
@@ -104,7 +106,7 @@ public class Client {
 		*/
 		
 		Query query2 = new Query();
-		query2.setDatabase(DBType.SNP);
+		query2.setDatabase(DBType.NLM_catalog);
 		//query2.setDatabase(DBType.PUBMED);
 		query2.addTerm("breast");
 		query2.addTerm("cancer");
@@ -117,14 +119,13 @@ public class Client {
 			System.out.println(result);
 		
 		Query Fquery = new Query();
-		Fquery.setDatabase(DBType.SNP);
+		Fquery.setDatabase(DBType.NLM_catalog);
 		for (String result: results)
 		Fquery.addId(result);
 		Fquery.setSearchType(SearchType.FETCH);
 		
 		// Calling Entrez
 		Document FxmlDocs = Entrez.callEntrez(Fquery);
-		//String  FxmlDocs = Entrez.callEntrez(Fquery);
 
 		// Parse answer into a list of articles
 		PubmedParser Fparser = new PubmedParser(FxmlDocs);
@@ -152,6 +153,7 @@ public class Client {
 		 *--------------------------------------------------------------------------------
 		*/
 		
+		/*
 		Query query3 = new Query();
 		query3.setDatabase(DBType.MALA_CARDS);
 		query3.addTerm("aneurysm");
@@ -166,6 +168,7 @@ public class Client {
 		}
 		
 		persistAgent.showObjects(Disease.ENTITY_NAME);
+		*/
 		
 		/*--------------------------------------------------------------------------------
 	     * Example 4: Retrieving models from the Biomodels database
@@ -173,6 +176,7 @@ public class Client {
 		 *--------------------------------------------------------------------------------
 		*/   
 		
+		/*
 		Query query4 = new Query();
 		query4.setDatabase(DBType.BIO_MODELS);
 		query4.addId("BIOMD0000000058");
@@ -188,7 +192,7 @@ public class Client {
 		}
 		
 		persistAgent.showObjects(Model.ENTITY_NAME);
-
+		 */
 		/*--------------------------------------------------------------------------------
 	     * Query: Retrieving aneurysms' models from local repository
 	     * Data was downloaded from the aneurisk web repository at: 
@@ -197,6 +201,7 @@ public class Client {
 		 *--------------------------------------------------------------------------------
 	    */
 	    
+		/*
 		String[] aneurysmIds = getAneurysmModelsIds();
 		
 		for (String model: aneurysmIds){
@@ -209,7 +214,7 @@ public class Client {
 			persistAgent.PersistObject(aneurysm);
 		}
 		persistAgent.showObjects(Aneurysm.ENTITY_NAME);
-
+		 */
 	}
 	
 	//--------------------------------------------------------------------------------

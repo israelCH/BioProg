@@ -64,6 +64,16 @@ public abstract class XMLparser {
 		}
 		return answer;
 	}
+	
+	protected  String getAttrContent(Element el, String name) {
+		
+		NodeList children = el.getChildNodes();
+		for(int i=0; i<children.getLength(); i++) {
+			Node child = children.item(i);
+			return child.getAttributes().getNamedItem(name).getNodeValue();
+		}
+		return "";
+	}
 
 	
 }

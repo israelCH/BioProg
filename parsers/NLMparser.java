@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,12 +46,12 @@ public class NLMparser extends XMLparser{
 			_articles.add(parseSingleArticle(nlmArticle));
 	}
 	
-	private Article parseSingleArticle(Element nlmArticleEl) {
+	private Article parseSingleArticle(Element nlmCatalogEl) {
 		
-		Element nlmUniqueIDEl = getChildByName(nlmArticleEl, "NlmUniqueID");
-		String  idStr = getTextContent(nlmUniqueIDEl);
+		Element nlmEl = getChildByName(nlmCatalogEl, "NlmUniqueID");
+		String  nlmID = getTextContent(nlmEl);
 		
-		Element articleEl = getChildByName(medlineCitationEl, "Article");
+		nlmEl = getChildByName(nlmCatalogEl, "DateCreated");
 		Element journalEl = getChildByName(articleEl, "Journal");
 		Element journalIssueEl = getChildByName(journalEl, "JournalIssue");
 		Element journalVolumeEl = getChildByName(journalIssueEl, "Volume");
