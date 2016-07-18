@@ -1,6 +1,14 @@
 package persistentdatabase.model;
 
 public class BookAuthor {
+	public BookAuthor(String lastName, String firstName, String initials, String dateAssocciatedWithName, String role) {
+		super();
+		LastName = lastName;
+		FirstName = firstName;
+		Initials = initials;
+		DateAssocciatedWithName = dateAssocciatedWithName;
+		Role = role;
+	}
 	private String LastName;
 	private String FirstName;
 	private String Initials;
@@ -18,4 +26,10 @@ public class BookAuthor {
 	public String getInitials() { return Initials; }
 	public String getDateAssocciatedWithName() { return DateAssocciatedWithName; }
 	public String getRole() { return Role; }
+	
+	@Override
+	public String toString() {
+		return LastName + " " + FirstName + "\n" + Initials
+				+ "\n" + DateAssocciatedWithName + "\n" + Role;
+	}
 }
