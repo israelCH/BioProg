@@ -15,10 +15,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import persistentdatabase.model.Article;
+import persistentdatabase.model.Book;
 
 public class NLMparser extends XMLparser{
 	
-	List<Article> _articles = new ArrayList<Article>();
+	List<Book> _books = new ArrayList<Book>();
 	
 	public NLMparser(Document doc) throws Exception {
 
@@ -31,22 +32,24 @@ public class NLMparser extends XMLparser{
 		}
 	}
 	
-	public List<Article> getArticles(){
-		return _articles;
+	public List<Book> getBooks(){
+		return _books;
 	}
 	
 	public void parse(){
 		Element rootEl = _doc.get(0).getDocumentElement();
-		List<Element> nlmArticleElements = getChildrensByName(rootEl, "NLMCatalogRecord");
+		List<Element> nlmBookElements = getChildrensByName(rootEl, "NLMCatalogRecord");
 		
-		if (nlmArticleElements.size() == 0) 
+		if (nlmBookElements.size() == 0) {
 			System.err.println("No articles found in document.");
+			return; // אם לא מצאנו אז נצא מהרוטינה
+		}
 		
-		for(Element nlmArticle : nlmArticleElements) 
-			_articles.add(parseSingleArticle(nlmArticle));
+		for(Element nlmBook : nlmBookElements) 
+			_books.add(parseSingleArticle(nlmBook));
 	}
 	
-	private Article parseSingleArticle(Element nlmCatalogEl) {
+	private Book parseSingleArticle(Element nlmCatalogEl) {
 		
 		Element nlmEl = getChildByName(nlmCatalogEl, "NlmUniqueID");
 		String  nlmID = getTextContent(nlmEl);

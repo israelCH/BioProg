@@ -17,7 +17,7 @@ public class Book implements Persistable {
 
 	public Book() {
 		super();
-		AuthorsList = new ArrayList<BookAuthor>();
+		_authorsList = new ArrayList<BookAuthor>();
 	}
 
 	@Id
@@ -28,56 +28,56 @@ public class Book implements Persistable {
 
 	private String NlmID;
 
-	private Date DatePublished;
-	private String PublicationCountry;
-	private String TitleMain;
-	private String TitleSub;
-	private List<BookAuthor> AuthorsList;
+	private Date _datePublished;
+	private String _publicationCountry;
+	private String _titleMain;
+	private String _titleSub;
+	private List<BookAuthor> _authorsList;
 	private String abst;
-	private String Language;
+	private String _language;
 
 	public void setDatePublished(Date date) {
-		DatePublished = date;      
+		_datePublished = date;      
 	}
 	
 	public void setPublicationCountry(String country) {
-		PublicationCountry = country;      
+		_publicationCountry = country;      
 	}
 	
 	public void setTitleMain(String title) {
-		TitleMain = title;      
+		_titleMain = title;      
 	}
 	
 	public void setTitleSub(String title) {
-		TitleSub = title;      
+		_titleSub = title;      
 	}
 	
 	public void setLanguage(String lan) {
-		Language = lan;      
+		_language = lan;      
 	}
 	
 	public String getDatePublished() {
-		return DatePublished.toString();      
+		return _datePublished.toString();      
 	}
 	
 	public String getPublicationCountry() {
-		return PublicationCountry;      
+		return _publicationCountry;      
 	}
 	
 	public String getTitleMain() {
-		return TitleMain;      
+		return _titleMain;      
 	}
 	
 	public String getTitleSub() {
-		return TitleSub;      
+		return _titleSub;      
 	}
 	
 	public String getLanguage() {
-		return Language;      
+		return _language;      
 	}
 	
 	public void addBookAuthor(String last, String first, String init, String date, String role) {
-		AuthorsList.add(new BookAuthor(last,first,init,date,role));
+		_authorsList.add(new BookAuthor(last,first,init,date,role));
 	}
 	
 	public String getId() {
@@ -87,11 +87,11 @@ public class Book implements Persistable {
 	public String toString() {
 		String str;
 		str = "ID: " + NlmID + "\n" 
-				+ "TITLE:  " + TitleMain + "-" + TitleSub + "\n" ;
-		for(int i=0 ; i < AuthorsList.size() ; i++){
-			str += "AUTHOR: " + AuthorsList.get(i).toString() + "\n";
+				+ "TITLE:  " + _titleMain + "-" + _titleSub + "\n" ;
+		for(int i=0 ; i < _authorsList.size() ; i++){
+			str += "AUTHOR: " + _authorsList.get(i).toString() + "\n";
 		}
-		str += DatePublished.toString();
+		str += _datePublished.toString();
 		return str;
 	}
 

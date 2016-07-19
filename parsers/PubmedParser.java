@@ -25,11 +25,11 @@ public class PubmedParser extends XMLparser{
 	
 	public PubmedParser(Document doc) throws Exception {
 
-		try{
+		try {
 			_doc = new ArrayList<Document>();
 			_doc.add(doc);
 		}
-		catch(Exception e){
+		catch(Exception e) {
 			System.err.print("Retrieval failed");
 		}
 	}
