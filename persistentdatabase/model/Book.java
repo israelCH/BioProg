@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,16 +27,21 @@ public class Book implements Persistable {
 
 	private String NlmID;
 
-	private Date _datePublished;
-	private String _publicationCountry;
+	private String _datePublished;
 	private String _titleMain;
 	private String _titleSub;
-	private List<BookAuthor> _authorsList;
-	private String abst;
+	private String _publicationCountry;
 	private String _language;
+	private List<BookAuthor> _authorsList;
+	private String _content;
+	private String abst;
 
-	public void setDatePublished(Date date) {
-		_datePublished = date;      
+	public void setNlmID(String id) {
+		NlmID = id;
+	}
+	
+	public void setDatePublished(String year, String month, String day) {
+		_datePublished = day + "/" + month + "/" + year;      
 	}
 	
 	public void setPublicationCountry(String country) {
@@ -56,8 +60,12 @@ public class Book implements Persistable {
 		_language = lan;      
 	}
 	
+	public void setContent(String con) {
+		_content = con;      
+	}
+	
 	public String getDatePublished() {
-		return _datePublished.toString();      
+		return _datePublished;      
 	}
 	
 	public String getPublicationCountry() {
@@ -76,7 +84,14 @@ public class Book implements Persistable {
 		return _language;      
 	}
 	
+	public String getContent() {
+		return _content;      
+	}
+	
 	public void addBookAuthor(String last, String first, String init, String date, String role) {
+		if(_authorsList == null) {
+			_authorsList = new ArrayList<BookAuthor>();
+		}
 		_authorsList.add(new BookAuthor(last,first,init,date,role));
 	}
 	

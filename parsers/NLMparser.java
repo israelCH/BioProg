@@ -51,15 +51,29 @@ public class NLMparser extends XMLparser{
 	
 	private Book parseSingleArticle(Element nlmCatalogEl) {
 		
+		Book book = new Book();
+		
 		Element nlmEl = getChildByName(nlmCatalogEl, "NlmUniqueID");
-		String  nlmID = getTextContent(nlmEl);
+		book.setNlmID(getTextContent(nlmEl));
 		
 		nlmEl = getChildByName(nlmCatalogEl, "DateCreated");
-		Element journalEl = getChildByName(articleEl, "Journal");
-		Element journalIssueEl = getChildByName(journalEl, "JournalIssue");
-		Element journalVolumeEl = getChildByName(journalIssueEl, "Volume");
-		Element issueEl = getChildByName(journalIssueEl, "Issue");
+		book.setDatePublished(getTextContent(getChildByName(nlmEl,"Year")), getTextContent(getChildByName(nlmEl,"Month")), getTextContent(getChildByName(nlmEl,"Day")));
+
+		book.setTitleMain(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "TitleMain"),"Title")));
+		book.setTitleSub(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "TitleRelated"),"Title")));
 		
+		book.setPublicationCountry(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "PublicationInfo"),"Country")));
+		
+		book.setLanguage(getTextContent(getChildByName(nlmCatalogEl, "Language")));
+		
+		List<Element> auth = getChildrensByName(getChildByName(nlmCatalogEl,"AuthorList"),"Author");
+		for(Element author : auth) {
+			book.addBookAuthor(getTextContent(getChildByName(nlmCatalogEl, "LastName")),
+							getTextContent(getChildByName(nlmCatalogEl, "ForeName")),
+							getTextContent(getChildByName(nlmCatalogEl, "Initials")),
+							getTextContent(getChildByName(nlmCatalogEl, "DatesAssociatedWithName")),
+							getTextContent(getChildByName(nlmCatalogEl, "Role")));
+		}
 		String volume = "?";
 		if (journalVolumeEl != null)
 			volume = getTextContent(journalVolumeEl);
