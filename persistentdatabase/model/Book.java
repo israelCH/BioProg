@@ -120,13 +120,15 @@ public class Book implements Persistable {
 			return abstStr;
 	}
 
+	public void setAbstract(String _abst)    { abst       = _abst;    }
+	
 	@Override
 	public String getEntityName() {
 		return ENTITY_NAME;
 	}
 
 	@Override
-	public String getIdIdentidier() {
+	public String getIdIdentifier() {
 		return "NlmUniqueID";
 	}
 }

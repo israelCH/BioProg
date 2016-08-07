@@ -31,9 +31,9 @@ public class PersistAgent {
 		entityManager.getTransaction().begin();	
 		
 		Query q = entityManager.createQuery
-				("SELECT p FROM " + object.getEntityName()+ " p WHERE p." + object.getIdIdentidier() 
-				+ " = :" + object.getIdIdentidier());
-		q. setParameter(object.getIdIdentidier(), object.getId());
+				("SELECT p FROM " + object.getEntityName()+ " p WHERE p." + object.getIdIdentifier() 
+				+ " = :" + object.getIdIdentifier());
+		q. setParameter(object.getIdIdentifier(), object.getId());
 		
 		boolean isNotExist = (q.getResultList().size() == 0);
 

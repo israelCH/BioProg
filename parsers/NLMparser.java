@@ -7,14 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import persistentdatabase.model.Article;
 import persistentdatabase.model.Book;
 
 public class NLMparser extends XMLparser{
@@ -68,89 +64,39 @@ public class NLMparser extends XMLparser{
 		
 		List<Element> auth = getChildrensByName(getChildByName(nlmCatalogEl,"AuthorList"),"Author");
 		for(Element author : auth) {
-			book.addBookAuthor(getTextContent(getChildByName(nlmCatalogEl, "LastName")),
-							getTextContent(getChildByName(nlmCatalogEl, "ForeName")),
-							getTextContent(getChildByName(nlmCatalogEl, "Initials")),
-							getTextContent(getChildByName(nlmCatalogEl, "DatesAssociatedWithName")),
-							getTextContent(getChildByName(nlmCatalogEl, "Role")));
+			book.addBookAuthor(getTextContent(getChildByName(author, "LastName")),
+							getTextContent(getChildByName(author, "ForeName")),
+							getTextContent(getChildByName(author, "Initials")),
+							getTextContent(getChildByName(author, "DatesAssociatedWithName")),
+							getTextContent(getChildByName(author, "Role")));
 		}
-		String volume = "?";
-		if (journalVolumeEl != null)
-			volume = getTextContent(journalVolumeEl);
 		
-		String issue = "?";
-		if (issueEl != null)
-			issue = getTextContent(issueEl);
-		
-		Element pubDateEl = getChildByName(journalIssueEl, "PubDate");
-		Element yearEl = getChildByName(pubDateEl, "Year");
-		String year = "";
-		if (yearEl != null)
-			year = getTextContent(yearEl);
-				
-		Element journalTitleEl = getChildByName(journalEl, "Title");
-		String journalTitle = getTextContent(journalTitleEl);
-			
-		Element authorsEl = getChildByName(articleEl, "AuthorList");
-		Element authorEl = getChildByName(authorsEl, "Author");
-		Element lastNameEl = getChildByName(authorEl, "LastName");
-		String lastName = getTextContent(lastNameEl);
-		Element foreNameEl = getChildByName(authorEl, "ForeName");
-		String foreName = getTextContent(foreNameEl);
-		String authors = lastName + " " + foreName;
-		
-		String DOI = "?";
-		Element DOI_El = getChildByName(articleEl, "ELocationID");
-		if (!(DOI_El==null))
-			DOI = getTextContent(DOI_El);
-		
-		Element articleTitleEl = getChildByName(articleEl, "ArticleTitle");
-		String title = getTextContent(articleTitleEl);
-		
-		Element abstractEl = getChildByName(articleEl, "Abstract");
-		StringBuilder absStr = new StringBuilder();
-
-		if (abstractEl != null) {
-			NodeList abstractChildren = abstractEl.getChildNodes();
-			for(int i=0; i<abstractChildren.getLength(); i++) {
-				Node child = abstractChildren.item(i);
-				if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("AbstractText")) {
-					absStr.append( getTextContent( (Element)child));
-				}
-			}
-		}
-		if (absStr.length() == 0)
-			absStr = new StringBuilder("?");
-		
-		Article article = new Article();
-		article.setDOI(DOI);
-		article.setAuthor(authors);
-		article.setId(idStr);
-		article.setJournal(journalTitle);
-		article.setVolume(volume);
-		article.setIssue(issue);
-		article.setYear(year);
-		article.setTitle(title.replace("\t", " "));
+		nlmEl = getChildByName(nlmCatalogEl, "ContentsNote");
+		if (nlmEl != null)
+			book.setContent(getTextContent(nlmEl));
+		else
+			nlmEl = getChildByName(getChildByName(nlmCatalogEl, "OtherAbstract "),"AbstractText");
+		if (nlmEl != null)
+			book.setContent(getTextContent(nlmEl));
 		
 		try {
 			String projectPath = System.getProperty("user.dir");
-			String filePath = projectPath + "/files/abstract/" + idStr + "_abstract.txt";
+			String filePath = projectPath + "/files/abstract/" + book.getIdIdentifier() + "_NlmBook.txt";
 			
 			File file = new File(filePath);
 			file.getParentFile().mkdirs();
 			PrintWriter out = new PrintWriter(file);
 			
-			String prtAbstract =  absStr.toString().replace("\t", " ");
+			String prtAbstract =  book.getAbstract();
 			out.println(prtAbstract);
-			article.setAbstract(filePath);
+			book.setAbstract(filePath);
 			
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		// article.setAbstract(absStr.toString().replace("\t", " "));
 		
-		return article;
+		return book;
 
 	}
 	

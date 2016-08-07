@@ -44,10 +44,12 @@ import urlInterfaces.MalaCards;
 import parsers.BiomodelsParser;
 import parsers.CSVparser;
 import parsers.MalaCardsParser;
+import parsers.NLMparser;
 import parsers.PubmedParser;
 import persistentdatabase.main.PersistAgent;
 import persistentdatabase.model.Aneurysm;
 import persistentdatabase.model.Article;
+import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
 import persistentdatabase.model.Model;
 import persistentdatabase.model.Persistable;
@@ -128,22 +130,22 @@ public class Client {
 		Document FxmlDocs = Entrez.callEntrez(Fquery);
 
 		// Parse answer into a list of articles
-		PubmedParser Fparser = new PubmedParser(FxmlDocs);
+		NLMparser Fparser = new NLMparser(FxmlDocs);
 		Fparser.parse();
-		List<Article> Farticles = Fparser.getArticles();
+		List<Book> Fbooks = Fparser.getBooks();
 		
-		for (Article article: Farticles){
-			persistAgent.PersistObject(article);
+		for (Book book: Fbooks){
+			persistAgent.PersistObject(book);
 		}
 		
 		// print persisted articles
-		persistAgent.showObjects(Article.ENTITY_NAME);
+		persistAgent.showObjects(Book.ENTITY_NAME);
 		
-		// get persisted articles back and print their abstracts from files
-		List<Persistable> FarticlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
-		for (int i = 0; i < FarticlesPer.size(); i++){
-			Article article = (Article) FarticlesPer.get(i);
-			System.out.println(article.getAbstract());
+		// get persisted book back and print their abstracts from files
+		List<Persistable> FbookPer = persistAgent.getObjectsList(Book.ENTITY_NAME);
+		for (int i = 0; i < FbookPer.size(); i++){
+			Book book = (Book) FbookPer.get(i);
+			System.out.println(book.getAbstract());
 			System.out.println("---------------------------------------");
 		}
 

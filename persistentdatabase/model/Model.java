@@ -53,7 +53,7 @@ public class Model implements Persistable {
 	}
 	
 	@Override
-	public String getIdIdentidier() {
+	public String getIdIdentifier() {
 		return "bioModelsID";
 	}
 	

@@ -54,7 +54,7 @@ public class Disease implements Persistable{
 	 }
 
 	 @Override
-	 public String getIdIdentidier() {
+	 public String getIdIdentifier() {
 		return "name";
 	 }
 

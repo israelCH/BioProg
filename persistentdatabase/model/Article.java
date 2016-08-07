@@ -84,7 +84,7 @@ public class Article implements Persistable{
 	}
 	
 	@Override
-	public String getIdIdentidier() {
+	public String getIdIdentifier() {
 		return "PMID";
 	}
  

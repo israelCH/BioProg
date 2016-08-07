@@ -78,7 +78,7 @@ public class Aneurysm implements Persistable{
 	}
 	
 	@Override
-	public String getIdIdentidier() {
+	public String getIdIdentifier() {
 		return "patientID";
 	}
 	

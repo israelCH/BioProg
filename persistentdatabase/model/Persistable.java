@@ -8,7 +8,7 @@ package persistentdatabase.model;
 
 public interface Persistable {
 
-	public String getIdIdentidier();
+	public String getIdIdentifier();
 	public String getId();
 	public String getEntityName();
 	
