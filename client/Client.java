@@ -103,19 +103,19 @@ public class Client {
 		----*/
 		
 		/*--------------------------------------------------------------------------------
-		 * Example 2: searching articles in pubmed
+		 * Example 2: searching articles in nlmCatalog
 		 *--------------------------------------------------------------------------------
 		*/
 		
-		Query query2 = new Query();
-		query2.setDatabase(DBType.NLM_catalog);
-		//query2.setDatabase(DBType.PUBMED);
-		query2.addTerm("breast");
-		query2.addTerm("cancer");
-		//query2.addField(SearchFields.JOURNAL,          "science");
-		//query2.addField(SearchFields.PUBLICATION_DATA, "2009"   );
-		query2.setSearchType(SearchType.SEARCH);
-		List<String> results = Entrez.searchEntrez(query2);
+		Query query6 = new Query();
+		query6.setDatabase(DBType.NLM_catalog);
+		//query6.setDatabase(DBType.PUBMED);
+		query6.addTerm("breast");
+		query6.addTerm("cancer");
+		//query6.addField(SearchFields.JOURNAL,          "science");
+		//query6.addField(SearchFields.PUBLICATION_DATA, "2009"   );
+		query6.setSearchType(SearchType.SEARCH);
+		List<String> results = Entrez.searchEntrez(query6);
 		
 		for (String result: results)
 			System.out.println(result);
@@ -149,9 +149,27 @@ public class Client {
 			System.out.println("---------------------------------------");
 		}
 
+		/*--------------------------------------------------------------------------------
+		 * Example 3: searching articles in pubmed
+		 *--------------------------------------------------------------------------------
+		*/
+		
+		/*Query query2 = new Query();
+		query2.setDatabase(DBType.PUBMED);
+		query2.addTerm("breast");
+		query2.addTerm("cancer");
+		query2.addField(SearchFields.JOURNAL,          "science");
+		query2.addField(SearchFields.PUBLICATION_DATA, "2009"   );
+		query2.setSearchType(SearchType.SEARCH);
+		List<String> results = Entrez.searchEntrez(query2);
+		
+		for (String result: results)
+			System.out.println(result);*/
+		
+		
 		
 		/*--------------------------------------------------------------------------------
-	     * Example 3: Retrieving diseases from MalaCards database
+	     * Example 4: Retrieving diseases from MalaCards database
 		 *--------------------------------------------------------------------------------
 		*/
 		
@@ -173,7 +191,7 @@ public class Client {
 		*/
 		
 		/*--------------------------------------------------------------------------------
-	     * Example 4: Retrieving models from the Biomodels database
+	     * Example 5: Retrieving models from the Biomodels database
 		 * according to their ids
 		 *--------------------------------------------------------------------------------
 		*/   
