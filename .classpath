@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="JarFiles/eclipselink.jar"/>
 	<classpathentry kind="lib" path="JarFiles/javax.persistence-2.1.0.jar"/>
 	<classpathentry kind="lib" path="JarFiles/jsoup-1.9.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
