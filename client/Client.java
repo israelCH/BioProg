@@ -63,6 +63,8 @@ public class Client {
 	
 	public static void main(String[] args) throws Exception{
 		
+
+		
 		//Persistent agent
 		PersistAgent persistAgent = new PersistAgent();
 		
@@ -264,5 +266,39 @@ public class Client {
 		out.println(log + "/n");
 		out.close();
 		
+	}
+	
+	public Boolean testQuary ()throws Exception
+	{
+		PersistAgent persistAgent = new PersistAgent();
+		Query query = new Query();
+		query.setDatabase(DBType.PUBMED);
+		query.addId("23371018");
+		query.addId("10227670");
+		query.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		Document xmlDocs = Entrez.callEntrez(query) ;
+		
+		// Parse answer into a list of articles
+		PubmedParser parser = new PubmedParser(xmlDocs);
+		parser.parse();
+		List<Article> articles = parser.getArticles();
+		
+		for (Article article: articles){
+			persistAgent.PersistObject(article);
+		}
+		
+		// print persisted articles
+		persistAgent.showObjects(Article.ENTITY_NAME);
+		
+		// get persisted articles back and print their abstracts from files
+		List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
+		for (int i = 0; i < articlesPer.size(); i++){
+			Article article = (Article) articlesPer.get(i);
+			System.out.println(article.getAbstract());
+			System.out.println("---------------------------------------");
+		}
+		return true;
 	}
 }
