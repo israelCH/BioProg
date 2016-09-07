@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -9,11 +10,14 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class test {
 
 	protected Shell shell;
 	private Text text;
+	private Text result;
 
 	/**
 	 * Launch the application.
@@ -51,19 +55,29 @@ public class test {
 		shell.setSize(531, 305);
 		shell.setText("SWT Application");
 		
+		result = new  Text(shell, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		result.setBounds(60, 62, 401, 166);
+		
+		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Client client = new Client();
 				try {
-					if (client.testQuary())
-						JOptionPane.showMessageDialog(null, "yes");
+					result.setText(" ");
+					String tmp = client.testQuary2(text.getText());
+					if (tmp =="")
+						result.setText("No result");
+						
 						else
-							JOptionPane.showMessageDialog(null, "no");
+						result.setText(tmp);
+
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					result.setText("server error ");
+					//e1.printStackTrace();
 				}
 
 			}
@@ -73,6 +87,10 @@ public class test {
 		
 		text = new Text(shell, SWT.BORDER);
 		text.setBounds(50, 24, 276, 32);
+		
+		
+		
+		
 
 	}
 }

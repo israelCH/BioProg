@@ -268,8 +268,10 @@ public class Client {
 		
 	}
 	
-	public Boolean testQuary ()throws Exception
+	public String testQuary ()throws Exception
 	{
+		String result =""; 
+				
 		PersistAgent persistAgent = new PersistAgent();
 		Query query = new Query();
 		query.setDatabase(DBType.PUBMED);
@@ -296,9 +298,51 @@ public class Client {
 		List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
 		for (int i = 0; i < articlesPer.size(); i++){
 			Article article = (Article) articlesPer.get(i);
-			System.out.println(article.getAbstract());
-			System.out.println("---------------------------------------");
+			result += article.getAbstract() + "---------------------------------------" +"\r\n"  ;
 		}
-		return true;
+		return result;
+	}
+	
+	public String testQuary2 (String str)throws Exception
+	{
+		String result =""; 
+		String[] terms = str.split("\\s+");
+		Query query6 = new Query();
+		query6.setDatabase(DBType.PUBMED);
+		for (int i = 0; i<terms.length; i++)
+			query6.addTerm(terms[i]);
+		query6.setSearchType(SearchType.SEARCH);
+		List<String> results = Entrez.searchEntrez(query6);
+				
+		PersistAgent persistAgent = new PersistAgent();
+		Query query = new Query();
+		query.setDatabase(DBType.PUBMED);
+		for (String id: results)
+			query.addId(id);
+
+		query.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		Document xmlDocs = Entrez.callEntrez(query) ;
+		
+		// Parse answer into a list of articles
+		PubmedParser parser = new PubmedParser(xmlDocs);
+		parser.parse();
+		List<Article> articles = parser.getArticles();
+		
+		for (Article article: articles){
+			persistAgent.PersistObject(article);
+		}
+		
+		// print persisted articles
+		persistAgent.showObjects(Article.ENTITY_NAME);
+		
+		// get persisted articles back and print their abstracts from files
+		List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
+		for (int i = 0; i < articlesPer.size(); i++){
+			Article article = (Article) articlesPer.get(i);
+			result += article.getAbstract() + "---------------------------------------" +"\r\n"  ;
+		}
+		return result;
 	}
 }
