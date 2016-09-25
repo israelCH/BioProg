@@ -32,6 +32,9 @@ import java.io.FilenameFilter;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.w3c.dom.Document;
 
 import database.DataBase.DBType;
@@ -344,5 +347,92 @@ public class Client {
 			result += article.getAbstract() + "---------------------------------------" +"\r\n"  ;
 		}
 		return result;
+	}
+	
+	public String testQuary3 (String str)throws Exception
+	{
+		String result =""; 
+		String[] terms = str.split("\\s+");
+		Query query6 = new Query();
+		query6.setDatabase(DBType.PUBMED);
+		for (int i = 0; i<terms.length; i++)
+			query6.addTerm(terms[i]);
+		query6.setSearchType(SearchType.SEARCH);
+		List<String> results = Entrez.searchEntrez(query6);
+				
+		PersistAgent persistAgent = new PersistAgent();
+		Query query = new Query();
+		query.setDatabase(DBType.PUBMED);
+		for (String id: results)
+			query.addId(id);
+
+		query.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		Document xmlDocs = Entrez.callEntrez(query) ;
+		
+		// Parse answer into a list of articles
+		PubmedParser parser = new PubmedParser(xmlDocs);
+		parser.parse();
+		List<Article> articles = parser.getArticles();
+		
+		for (Article article: articles){
+			//persistAgent.PersistObject(article);
+			result += article.toString() + "---------------------------------------" +"\r\n"  ;
+		}
+		
+		// print persisted articles
+		//persistAgent.showObjects(Article.ENTITY_NAME);
+		
+		// get persisted articles back and print their abstracts from files
+		//List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
+		//for (Persistable article : articlesPer) {
+			//result += article.toString() + "---------------------------------------" +"\r\n"  ;
+		//}
+		
+	   
+		return result;
+	}
+	
+	public List<Article> testQuary4 (String str)throws Exception
+	{
+		
+		String result =""; 
+		String[] terms = str.split("\\s+");
+		Query query6 = new Query();
+		query6.setDatabase(DBType.PUBMED);
+		for (int i = 0; i<terms.length; i++)
+			query6.addTerm(terms[i]);
+		query6.setSearchType(SearchType.SEARCH);
+		List<String> results = Entrez.searchEntrez(query6);
+				
+		PersistAgent persistAgent = new PersistAgent();
+		Query query = new Query();
+		query.setDatabase(DBType.PUBMED);
+		for (String id: results)
+			query.addId(id);
+
+		query.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		Document xmlDocs = Entrez.callEntrez(query) ;
+		
+		// Parse answer into a list of articles
+		PubmedParser parser = new PubmedParser(xmlDocs);
+		parser.parse();
+		List<Article> articles = parser.getArticles();
+		
+		//for (Article article: articles){
+		//	 Button btn = new Button(comp, SWT.NONE);
+		//	 btn.setText(article.getId());
+			
+			
+			
+		//}
+		
+		
+		
+	   
+		return articles;
 	}
 }

@@ -1,5 +1,7 @@
 package client;
 
+import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
@@ -9,9 +11,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+//import com.sun.java.util.jar.pack.Attribute.Layout;
+
+import persistentdatabase.model.Article;
+
+import org.eclipse.swt.widgets.Composite;
 
 public class test {
 
@@ -52,13 +61,19 @@ public class test {
 	 */
 	protected void createContents()  {
 		shell = new Shell();
-		shell.setSize(531, 305);
+		shell.setSize(676, 458);
 		shell.setText("SWT Application");
 		
 		result = new  Text(shell, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		result.setBounds(60, 62, 401, 166);
+		result.setBounds(60, 62, 401, 42);
 		
+		Composite composite = new Composite(shell, SWT.NONE);
+		composite.setBounds(60, 123, 401, 269);
+		GridLayout gl = new GridLayout();
+		 gl.numColumns = 1;
+		 composite.setLayout(gl);
+				
 		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -67,13 +82,22 @@ public class test {
 				Client client = new Client();
 				try {
 					result.setText(" ");
-					String tmp = client.testQuary2(text.getText());
-					if (tmp =="")
+					//String tmp = client.testQuary3(text.getText());
+					/*if (tmp =="")
 						result.setText("No result");
 						
 						else
-						result.setText(tmp);
-
+						result.setText(tmp);*/
+					
+					List<Article> art = client.testQuary4(text.getText());
+						for (Article article: art){
+						 Button btn = new Button(composite, SWT.NONE);
+						 btn.setText(article.getId());	
+					}
+						
+						composite.layout();
+						
+						
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					result.setText("server error ");
@@ -87,6 +111,8 @@ public class test {
 		
 		text = new Text(shell, SWT.BORDER);
 		text.setBounds(50, 24, 276, 32);
+		
+		
 		
 		
 		
