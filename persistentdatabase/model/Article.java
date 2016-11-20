@@ -83,6 +83,10 @@ public class Article implements Persistable{
 		return ENTITY_NAME;
 	}
 	
+	public String getTitle() {
+		return title;
+	}
+	
 	@Override
 	public String getIdIdentifier() {
 		return "PMID";

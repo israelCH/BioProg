@@ -37,7 +37,7 @@ public class Entrez {
 		
 		List<String> uilist = new ArrayList<String>();
 		
-		final String entrezSearchURL = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?";
+		final String entrezSearchURL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?";
 		
 		String queryStr = entrezSearchURL + buildQuery(query) + "&rettype=uilist";
 		System.out.println("Query URL: " + queryStr);
@@ -62,7 +62,7 @@ public class Entrez {
 	public static Document callEntrez(Query query) 
 			throws IOException, ParserConfigurationException, SAXException {
 		
-		final String entrezFetchURL  = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?";
+		final String entrezFetchURL  = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?";
 		
 		String queryStr = entrezFetchURL + buildQuery(query);
 		System.out.println("Query URL: " + queryStr);
@@ -93,8 +93,8 @@ public class Entrez {
 			if (!_ids.isEmpty()){
 				queryStr += "&id=";
 				
-				for (int i = 0; i < 2 ; i++)
-					//for (int i = 0; i < _ids.size() - 1; i++)
+				//for (int i = 0; i < 2 ; i++)
+					for (int i = 0; i < _ids.size() - 1; i++)
 					queryStr += _ids.get(i) + ",";
 				queryStr +=   _ids.get(_ids.size()-1);
 			}

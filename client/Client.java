@@ -435,4 +435,76 @@ public class Client {
 	   
 		return articles;
 	}
+	
+	public String testQuary5 (String id)throws Exception
+	{
+		
+		Query query2 = new Query();
+		query2.setDatabase(DBType.PUBMED);
+		query2.addId(id);
+
+		query2.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		try{
+		Document xmlDocs = Entrez.callEntrez(query2) ;
+		PubmedParser parser = new PubmedParser(xmlDocs);
+		parser.parse();
+		List<Article> articles = parser.getArticles();
+		
+		return articles.get(0).toString();
+		}
+		catch(Exception e1){
+			Query query3 = new Query();
+			return "catched";
+		}
+		
+		// Parse answer into a list of articles
+		
+
+		
+	}
+	
+	public List<String> testQuary6 (String str)throws Exception
+	{
+		
+		String result =""; 
+		String[] terms = str.split("\\s+");
+		Query query6 = new Query();
+		query6.setDatabase(DBType.NLM_catalog);
+		for (int i = 0; i<terms.length; i++)
+			query6.addTerm(terms[i]);
+		query6.setSearchType(SearchType.SEARCH);
+		List<String> results = Entrez.searchEntrez(query6);
+		
+		return results;
+	}
+	
+	public String testQuary7 (String id)throws Exception
+	{
+		
+		Query query2 = new Query();
+		query2.setDatabase(DBType.NLM_catalog);
+		query2.addId(id);
+
+		query2.setSearchType(SearchType.FETCH);
+		
+		// Calling Entrez
+		try{
+		Document xmlDocs = Entrez.callEntrez(query2) ;
+		NLMparser parser = new NLMparser(xmlDocs);
+		parser.parse();
+		List<Book> books = parser.getBooks();
+		
+		return books.get(0).toString();
+		}
+		catch(Exception e1){
+			return "catched";
+		}
+		
+		// Parse answer into a list of articles
+		
+
+		
+	}
 }
