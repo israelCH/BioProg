@@ -1,4 +1,4 @@
-package client;
+	package client;
 
 import java.util.List;
 
@@ -27,7 +27,6 @@ public class test {
 	protected Shell shell;
 	private Text text;
 	private Text result;
-	static Composite composite;
 
 	/**
 	 * Launch the application.
@@ -67,10 +66,10 @@ public class test {
 		
 		result = new  Text(shell, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		result.setBounds(189, 80, 401, 312);
+		result.setBounds(60, 62, 401, 42);
 		
-		composite = new Composite(shell, SWT.NONE);
-		composite.setBounds(60, 80, 116, 312);
+		Composite composite = new Composite(shell, SWT.NONE);
+		composite.setBounds(60, 123, 401, 269);
 		GridLayout gl = new GridLayout();
 		 gl.numColumns = 1;
 		 composite.setLayout(gl);
@@ -84,36 +83,20 @@ public class test {
 				try {
 					result.setText(" ");
 					//String tmp = client.testQuary3(text.getText());
+					/*if (tmp =="")
+						result.setText("No result");
+						
+						else
+						result.setText(tmp);*/
+					// hey how are you
 					
-					
-					List<String> art = client.testQuary6(text.getText());
-						composite.dispose();
-						composite = new Composite(shell, SWT.NONE);
-						composite.setBounds(60, 80, 116, 312);
-						composite.setLayout(gl);
-						for (String article: art){
+					List<Article> art = client.testQuary4(text.getText());
+						for (Article article: art){
 						 Button btn = new Button(composite, SWT.NONE);
-						 btn.setText(article);	
-						 btn.setToolTipText(article);
-						 btn.addSelectionListener(new SelectionAdapter() {
-							 @Override
-								public void widgetSelected(SelectionEvent e) {
-								 Client client = new Client();
-								 try {
-									 result.setText(" ");
-									 result.setText(client.testQuary7(article));
-								 } 
-								 catch (Exception e1) {
-										// TODO Auto-generated catch block
-										result.setText("server error ");
-										//e1.printStackTrace();
-									}
-								 
-							 }
-						});
+						 btn.setText(article.getId());	
 					}
 						
-						composite.layout(); 
+						composite.layout();
 						
 						
 				} catch (Exception e1) {
@@ -124,11 +107,11 @@ public class test {
 
 			}
 		});
-		btnNewButton.setBounds(474, 18, 116, 32);
+		btnNewButton.setBounds(332, 24, 116, 32);
 		btnNewButton.setText("searce");
 		
 		text = new Text(shell, SWT.BORDER);
-		text.setBounds(50, 24, 401, 32);
+		text.setBounds(50, 24, 276, 32);
 		
 		
 		
