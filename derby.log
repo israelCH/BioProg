@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Sun Nov 20 20:43:36 IST 2016:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0158-830c-fdeb-000008eadd48 
-on database directory C:\Users\administrator.000\git\BioProg2\db with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/administrator.000/git/BioProg2/JarFiles/derby.jar
+Wed Jan 25 14:39:55 EET 2017:
+Booting Derby (version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137)) instance a816c00e-0159-d5a3-bf3c-000004912a58 
+on database directory C:\Users\administrator.000\git\BioProg2\db in READ ONLY mode with class loader sun.misc.Launcher$AppClassLoader@73d16e93. 
+Loaded from file:/C:/Users/David/git/BioProg/JarFiles/derby.jar.
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_91-b14
-user.dir=C:\Users\administrator.000\git\BioProg2
-os.name=Windows 8.1
+java.runtime.version=1.8.0_121-b13
+user.dir=C:\Users\David\git\BioProg
+os.name=Windows 10
 os.arch=amd64
-os.version=6.3
+os.version=10.0
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''
