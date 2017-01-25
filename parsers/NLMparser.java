@@ -36,7 +36,7 @@ public class NLMparser extends XMLparser{
 		Element rootEl = _doc.get(0).getDocumentElement();
 		List<Element> nlmBookElements = getChildrensByName(rootEl, "NLMCatalogRecord");
 		
-		if (nlmBookElements.size() == 0) {
+		if (nlmBookElements.size() == 0) { // להוסיף התיחסות למקרה שזה לא ספר אלא ז'ורנאל
 			System.err.println("No articles found in document.");
 			return; // אם לא מצאנו אז נצא מהרוטינה
 		}
@@ -56,7 +56,7 @@ public class NLMparser extends XMLparser{
 		book.setDatePublished(getTextContent(getChildByName(nlmEl,"Year")), getTextContent(getChildByName(nlmEl,"Month")), getTextContent(getChildByName(nlmEl,"Day")));
 
 		book.setTitleMain(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "TitleMain"),"Title")));
-		book.setTitleSub(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "TitleRelated"),"Title")));
+		//book.setTitleSub(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "TitleAlternate"),"Title")));
 		
 		book.setPublicationCountry(getTextContent(getChildByName(getChildByName(nlmCatalogEl, "PublicationInfo"),"Country")));
 		
@@ -66,18 +66,16 @@ public class NLMparser extends XMLparser{
 		for(Element author : auth) {
 			book.addBookAuthor(getTextContent(getChildByName(author, "LastName")),
 							getTextContent(getChildByName(author, "ForeName")),
-							getTextContent(getChildByName(author, "Initials")),
-							getTextContent(getChildByName(author, "DatesAssociatedWithName")),
-							getTextContent(getChildByName(author, "Role")));
+							getTextContent(getChildByName(author, "Initials")));
 		}
 		
 		nlmEl = getChildByName(nlmCatalogEl, "ContentsNote");
 		if (nlmEl != null)
 			book.setContent(getTextContent(nlmEl));
-		else
-			nlmEl = getChildByName(getChildByName(nlmCatalogEl, "OtherAbstract "),"AbstractText");
+		
+		nlmEl = getChildByName(getChildByName(nlmCatalogEl, "OtherAbstract "),"AbstractText");
 		if (nlmEl != null)
-			book.setContent(getTextContent(nlmEl));
+			book.setAbstract(getTextContent(nlmEl));
 		
 		try {
 			String projectPath = System.getProperty("user.dir");

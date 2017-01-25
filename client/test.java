@@ -70,9 +70,10 @@ public class test {
 		shell.setSize(676, 458);
 		shell.setText("SWT Application");
 		
-		result = new  Text(shell, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		result = new  Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		result.setBounds(132, 62, 329, 248);		
+		result.setBounds(132, 62, 329, 248);	
+		result.setSize((int)(shell.getBounds().width / 2), (int)(shell.getBounds().height * 0.6));
 		
 		composite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		composite.setLocation(10, 62);
@@ -101,37 +102,24 @@ public class test {
 					// hey how are you
 					
 					List<Article> art = client.testQuary4(text.getText());
-						for (Article article: art){
-						 //Button btn = new Button(composite, SWT.NONE);
-						// btn.setText(article.getId());	
-							itemsList.add(article.getTitle());
-					}	
-//					itemsList.addListener(SWT.Selection, new Listener() {
-//					    public void handleEvent(Event e) {
-//					        String string = "";
-//					        int[] selection = itemsList.getSelectionIndices();
-//					        for (int i = 0; i < selection.length; i++) {
-//					          string += selection[i] + " ";
-//					        }
-//					        System.out.println("Selection={" + string + "}");
-//					    }
-//					});
-					    itemsList.addSelectionListener(new SelectionListener() {
-					    public void widgetSelected(SelectionEvent event) {
-					      int[] selectedItems = itemsList.getSelectionIndices();
-					      String outString = "";
-					      for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++)
-					        outString += selectedItems[loopIndex] + " ";
-					      result.setText("Selected Items: " + outString);
+					for (Article article: art)
+						itemsList.add(article.getTitle());
+						
+					itemsList.addSelectionListener(new SelectionListener() {
+					public void widgetSelected(SelectionEvent event) {
+						int[] selectedItems = itemsList.getSelectionIndices();
+						Article article = art.get(selectedItems[0]);
+//					      int[] selectedItems = itemsList.getSelectionIndices();
+//					      String outString = "";
+//					      for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++)
+//					        outString += selectedItems[loopIndex] + " ";
+					      result.setText(article.getAbstract());
 					    }
 
 					    public void widgetDefaultSelected(SelectionEvent event) {
-					      int[] selectedItems = itemsList.getSelectionIndices();
-					      String outString = "";
-					      for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++)
-					        outString += selectedItems[loopIndex] + " ";
-					      //System.out.println("Selected Items: " + outString);
-					      result.setText("Selected Items: " + outString);
+							int[] selectedItems = itemsList.getSelectionIndices();
+							Article article = art.get(selectedItems[0]);
+						    result.setText(article.getAbstract());
 					    }
 					});
 					composite.setContent(itemsList);

@@ -29,12 +29,12 @@ public class Book implements Persistable {
 
 	private String _datePublished;
 	private String _titleMain;
-	private String _titleSub;
+	//private String _titleSub;
 	private String _publicationCountry;
 	private String _language;
 	private List<BookAuthor> _authorsList;
 	private String _content;
-	private String abst;
+	private String _abst;
 
 	public void setNlmID(String id) {
 		NlmID = id;
@@ -52,9 +52,9 @@ public class Book implements Persistable {
 		_titleMain = title;      
 	}
 	
-	public void setTitleSub(String title) {
-		_titleSub = title;      
-	}
+//	public void setTitleSub(String title) {
+//		_titleSub = title;      
+//	}
 	
 	public void setLanguage(String lan) {
 		_language = lan;      
@@ -76,9 +76,9 @@ public class Book implements Persistable {
 		return _titleMain;      
 	}
 	
-	public String getTitleSub() {
-		return _titleSub;      
-	}
+//	public String getTitleSub() {
+//		return _titleSub;      
+//	}
 	
 	public String getLanguage() {
 		return _language;      
@@ -88,11 +88,11 @@ public class Book implements Persistable {
 		return _content;      
 	}
 	
-	public void addBookAuthor(String last, String first, String init, String date, String role) {
+	public void addBookAuthor(String last, String first, String init) {
 		if(_authorsList == null) {
 			_authorsList = new ArrayList<BookAuthor>();
 		}
-		_authorsList.add(new BookAuthor(last,first,init,date,role));
+		_authorsList.add(new BookAuthor(last,first,init));
 	}
 	
 	public String getId() {
@@ -102,7 +102,7 @@ public class Book implements Persistable {
 	public String toString() {
 		String str;
 		str = "ID: " + NlmID + "\n" 
-				+ "TITLE:  " + _titleMain + "-" + _titleSub + "\n" ;
+				+ "TITLE:  " + _titleMain + "\n" ;
 		for(int i=0 ; i < _authorsList.size() ; i++){
 			str += "AUTHOR: " + _authorsList.get(i).toString() + "\n";
 		}
@@ -113,14 +113,14 @@ public class Book implements Persistable {
 	public String getAbstract() { 
 			String abstStr = "";
 			try {
-				abstStr = new String(Files.readAllBytes(Paths.get(abst)));
+				abstStr = new String(Files.readAllBytes(Paths.get(_abst)));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			return abstStr;
 	}
 
-	public void setAbstract(String _abst)    { abst       = _abst;    }
+	public void setAbstract(String abst)    { _abst       = abst;    }
 	
 	@Override
 	public String getEntityName() {
