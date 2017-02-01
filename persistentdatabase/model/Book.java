@@ -72,7 +72,7 @@ public class Book implements Persistable {
 		return _publicationCountry;      
 	}
 	
-	public String getTitleMain() {
+	public String getTitle() {
 		return _titleMain;      
 	}
 	
@@ -88,11 +88,11 @@ public class Book implements Persistable {
 		return _content;      
 	}
 	
-	public void addBookAuthor(String last, String first, String init) {
+	public void addBookAuthor(String last, String first, String init, String coll) {
 		if(_authorsList == null) {
 			_authorsList = new ArrayList<BookAuthor>();
 		}
-		_authorsList.add(new BookAuthor(last,first,init));
+		_authorsList.add(new BookAuthor(last,first,init, coll));
 	}
 	
 	public String getId() {

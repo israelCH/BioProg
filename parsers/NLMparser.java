@@ -64,18 +64,39 @@ public class NLMparser extends XMLparser{
 		
 		List<Element> auth = getChildrensByName(getChildByName(nlmCatalogEl,"AuthorList"),"Author");
 		for(Element author : auth) {
-			book.addBookAuthor(getTextContent(getChildByName(author, "LastName")),
-							getTextContent(getChildByName(author, "ForeName")),
-							getTextContent(getChildByName(author, "Initials")));
+			String ls,fr,in,co;
+			nlmEl = getChildByName(author, "LastName");
+			if (nlmEl != null)
+				ls = getTextContent(nlmEl);
+			else
+				ls = null;
+			nlmEl = getChildByName(author, "ForeName");
+			if (nlmEl != null)
+				fr = getTextContent(nlmEl);
+			else
+				fr = null;
+			nlmEl = getChildByName(author, "Initials");
+			if (nlmEl != null)
+				in = getTextContent(nlmEl);
+			else
+				in = null;
+			nlmEl = getChildByName(author, "CollectiveName");
+			if (nlmEl != null)
+				co = getTextContent(nlmEl);
+			else
+				co = null;
+			book.addBookAuthor(ls,fr,in,co);
 		}
 		
 		nlmEl = getChildByName(nlmCatalogEl, "ContentsNote");
 		if (nlmEl != null)
 			book.setContent(getTextContent(nlmEl));
 		
-		nlmEl = getChildByName(getChildByName(nlmCatalogEl, "OtherAbstract "),"AbstractText");
+		nlmEl = getChildByName(nlmCatalogEl, "OtherAbstract ");
 		if (nlmEl != null)
-			book.setAbstract(getTextContent(nlmEl));
+			nlmEl = getChildByName(nlmEl,"AbstractText");
+			if (nlmEl != null)
+				book.setAbstract(getTextContent(nlmEl));
 		
 		try {
 			String projectPath = System.getProperty("user.dir");
@@ -85,7 +106,7 @@ public class NLMparser extends XMLparser{
 			file.getParentFile().mkdirs();
 			PrintWriter out = new PrintWriter(file);
 			
-			String prtAbstract =  book.getAbstract();
+			String prtAbstract =  book.toString();
 			out.println(prtAbstract);
 			book.setAbstract(filePath);
 			

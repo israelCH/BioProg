@@ -26,16 +26,21 @@
 
 package client;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.w3c.dom.Document;
+
+import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 import database.DataBase.DBType;
 import database.Fields.SearchFields;
@@ -64,12 +69,21 @@ public class Client {
 	final static String modelsPath = "/Users/Zorkd/Dropbox/1AFiles/NBEL/aneurysm/Models/";
 	final static String logPath    = System.getProperty("user.dir");
 	
-	public static void main(String[] args) throws Exception{
+	private static String ServerAddress;
+	private static int ServerPort;
+	Socket sock;
+	PrintWriter output;
+	BufferedReader input;
+	
+	public static void main(String[] args) throws Exception{	
 		
+		// -----------------------------------------------------------------------------------
+		// -----------   הפרדה בין מה שאנחנו כותבים למה שאלישי כתב לנו בהתחלה    -------------
+		// -----------------------------------------------------------------------------------
 
 		
 		//Persistent agent
-		PersistAgent persistAgent = new PersistAgent();
+		//PersistAgent persistAgent = new PersistAgent();
 		
 		/*--------------------------------------------------------------------------------
 		 * Example 1: Fetching articles from Pubmed
@@ -112,47 +126,47 @@ public class Client {
 		 *--------------------------------------------------------------------------------
 		*/
 		
-		Query query6 = new Query();
-		query6.setDatabase(DBType.NLM_catalog);
+//		Query query6 = new Query();
+//		query6.setDatabase(DBType.NLM_catalog);
 		//query6.setDatabase(DBType.PUBMED);
-		query6.addTerm("breast");
-		query6.addTerm("cancer");
+//		query6.addTerm("breast");
+//		query6.addTerm("cancer");
 		//query6.addField(SearchFields.JOURNAL,          "science");
 		//query6.addField(SearchFields.PUBLICATION_DATA, "2009"   );
-		query6.setSearchType(SearchType.SEARCH);
-		List<String> results = Entrez.searchEntrez(query6);
-		
-		for (String result: results)
-			System.out.println(result);
-		
-		Query Fquery = new Query();
-		Fquery.setDatabase(DBType.NLM_catalog);
-		for (String result: results)
-		Fquery.addId(result);
-		Fquery.setSearchType(SearchType.FETCH);
+//		query6.setSearchType(SearchType.SEARCH);
+//		List<String> results = Entrez.searchEntrez(query6);
+//		
+//		for (String result: results)
+//			System.out.println(result);
+//		
+//		Query Fquery = new Query();
+//		Fquery.setDatabase(DBType.NLM_catalog);
+//		for (String result: results)
+//		Fquery.addId(result);
+//		Fquery.setSearchType(SearchType.FETCH);
 		
 		// Calling Entrez
-		Document FxmlDocs = Entrez.callEntrez(Fquery);
+//		Document FxmlDocs = Entrez.callEntrez(Fquery);
 
 		// Parse answer into a list of articles
-		NLMparser Fparser = new NLMparser(FxmlDocs);
-		Fparser.parse();
-		List<Book> Fbooks = Fparser.getBooks();
-		
-		for (Book book: Fbooks){
-			persistAgent.PersistObject(book);
-		}
+//		NLMparser Fparser = new NLMparser(FxmlDocs);
+//		Fparser.parse();
+//		List<Book> Fbooks = Fparser.getBooks();
+//		
+//		for (Book book: Fbooks){
+//			persistAgent.PersistObject(book);
+//		}
 		
 		// print persisted articles
-		persistAgent.showObjects(Book.ENTITY_NAME);
+		//persistAgent.showObjects(Book.ENTITY_NAME);
 		
 		// get persisted book back and print their abstracts from files
-		List<Persistable> FbookPer = persistAgent.getObjectsList(Book.ENTITY_NAME);
-		for (int i = 0; i < FbookPer.size(); i++){
-			Book book = (Book) FbookPer.get(i);
-			System.out.println(book.getAbstract());
-			System.out.println("---------------------------------------");
-		}
+//		List<Persistable> FbookPer = persistAgent.getObjectsList(Book.ENTITY_NAME);
+//		for (int i = 0; i < FbookPer.size(); i++){
+//			Book book = (Book) FbookPer.get(i);
+//			System.out.println(book.getAbstract());
+//			System.out.println("---------------------------------------");
+//		}
 
 		/*--------------------------------------------------------------------------------
 		 * Example 3: searching articles in pubmed
@@ -397,7 +411,7 @@ public class Client {
 	public List<Article> testQuary4 (String str)throws Exception
 	{
 		
-		String result =""; 
+		//String result =""; 
 		String[] terms = str.split("\\s+");
 		Query query6 = new Query();
 		query6.setDatabase(DBType.PUBMED);
@@ -406,7 +420,7 @@ public class Client {
 		query6.setSearchType(SearchType.SEARCH);
 		List<String> results = Entrez.searchEntrez(query6);
 				
-		PersistAgent persistAgent = new PersistAgent();
+		//PersistAgent persistAgent = new PersistAgent();
 		Query query = new Query();
 		query.setDatabase(DBType.PUBMED);
 		for (String id: results)
@@ -434,5 +448,83 @@ public class Client {
 		
 	   
 		return articles;
+	}
+	
+	public List<Book> testQuary5 (String str)throws Exception
+	{		
+		String result =""; 
+		String[] terms = str.split("\\s+");
+		Query query6 = new Query();
+		query6.setDatabase(DBType.NLM_catalog);
+		query6.setSearchType(SearchType.SEARCH);
+		for (int i = 0; i<terms.length; i++)
+			query6.addTerm(terms[i]);		
+		List<String> results = Entrez.searchEntrez(query6);
+				
+		PersistAgent persistAgent = new PersistAgent();
+		Query query = new Query();
+		query.setDatabase(DBType.NLM_catalog);
+		query.setSearchType(SearchType.FETCH);
+		for (String id: results)
+			query.addId(id);
+		
+		// Calling Entrez
+		Document xmlDocs = Entrez.callEntrez(query);
+		
+		// Parse answer into a list of books
+		NLMparser parser = new NLMparser(xmlDocs);
+		parser.parse();
+		List<Book> books = parser.getBooks();
+		
+		return books;
+	}
+	
+	public List<String> onlineSearch (String str)throws Exception // פונה לשרת
+	{
+		// יצרנו כבר תקשורת חוץ בפונקצית איתחול תקשורת
+		output.println(str); // שולחים בפועל את הטקסט לחיפוש
+		String answer = input.readLine();
+		
+		// ---- להשלים שהשרת יחזיר רשימה של מחרוזות עם פסיקים ואנחנו נפענח לליסט ונחזיר ללקוח -----
+		// ---- להשלים שהשרת יחזיר רשימה של מחרוזות עם פסיקים ואנחנו נפענח לליסט ונחזיר ללקוח -----
+		// ---- להשלים שהשרת יחזיר רשימה של מחרוזות עם פסיקים ואנחנו נפענח לליסט ונחזיר ללקוח -----
+		
+		List<String> results;
+		
+		return results;
+		
+		// מפה - זה יעבור לשרת
+//		String[] terms = str.split("\\s+");
+//		Query query6 = new Query();
+//		query6.setDatabase(DBType.NLM_catalog);
+//		query6.setSearchType(SearchType.SEARCH);
+//		for (int i = 0; i<terms.length; i++)
+//			query6.addTerm(terms[i]);
+//		List<String> results = Entrez.searchEntrez(query6);
+//				
+//		PersistAgent persistAgent = new PersistAgent();
+//		Query query = new Query();
+//		query.setDatabase(DBType.NLM_catalog);
+//		query.setSearchType(SearchType.FETCH);
+//		for (String id: results)
+//			query.addId(id);
+//		
+//		// Calling Entrez
+//		Document xmlDocs = Entrez.callEntrez(query);
+//		
+//		// Parse answer into a list of books
+//		NLMparser parser = new NLMparser(xmlDocs);
+//		parser.parse();
+//		List<Book> books = parser.getBooks();
+//		
+//		return results;
+	}
+	
+	public void InitialConnection() throws Exception {
+		ServerAddress = "127.0.0.1";
+		ServerPort = 9095;
+		sock = new Socket(ServerAddress,ServerPort);
+		input = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		output = new PrintWriter(sock.getOutputStream(),true);
 	}
 }

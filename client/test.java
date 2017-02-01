@@ -24,6 +24,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 //import com.sun.java.util.jar.pack.Attribute.Layout;
 
 import persistentdatabase.model.Article;
+import persistentdatabase.model.Book;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -52,7 +53,9 @@ public class test {
 	 */
 	public void open() {
 		Display display = Display.getDefault();
-		createContents();
+//		createContentsPubmed();
+//		createContentsNlmCatalog();
+		createContentsOnlineNlmCatalog(); // בונה את החלון ומקשר לפונקציות על השרת
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -65,9 +68,11 @@ public class test {
 	/**
 	 * Create contents of the window.
 	 */
-	protected void createContents()  {
+	protected void createContentsPubmed()  {
 		shell = new Shell();
 		shell.setSize(676, 458);
+		shell.setImage(SWTResourceManager.getImage(test.class, "/Images/icon.PNG"));
+		shell.setBackgroundImage(SWTResourceManager.getImage(test.class, "/Images/search_background.jpg"));
 		shell.setText("SWT Application");
 		
 		result = new  Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
@@ -141,5 +146,145 @@ public class test {
 		text = new Text(shell, SWT.BORDER);
 		text.setBounds(10, 24, 329, 32);
 		text.setFocus();
+		text.setText("blood"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+	}
+	
+	protected void createContentsNlmCatalog()  {
+		shell = new Shell();
+		shell.setImage(SWTResourceManager.getImage(test.class, "/Images/icon.PNG"));
+		shell.setBackgroundImage(SWTResourceManager.getImage(test.class, "/Images/search_background.jpg"));
+		shell.setSize(676, 458);
+		shell.setText("SWT Application");
+		
+		result = new  Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		result.setBounds(132, 62, 329, 248);	
+		result.setSize((int)(shell.getBounds().width / 2), (int)(shell.getBounds().height * 0.6));
+		
+		composite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		composite.setLocation(10, 62);
+		composite.setSize(shell.getBounds().width / 6, (int)(shell.getBounds().height * 0.6));
+		composite.setExpandHorizontal(true);
+		composite.setExpandVertical(true);
+		GridLayout gl = new GridLayout();
+		gl.numColumns = 1;
+		
+		org.eclipse.swt.widgets.List itemsList = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		
+		Button btnNewButton = new Button(shell, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Client client = new Client();
+				try {
+					result.setText(" ");
+					
+					List<Book> books = client.testQuary5(text.getText());
+					for (Book book: books)
+						itemsList.add(book.getTitle());
+						
+					itemsList.addSelectionListener(new SelectionListener() {
+					public void widgetSelected(SelectionEvent event) {
+						int[] selectedItems = itemsList.getSelectionIndices();
+						Book book = books.get(selectedItems[0]);
+					      result.setText(book.toString());
+					    }
+
+					    public void widgetDefaultSelected(SelectionEvent event) {
+							int[] selectedItems = itemsList.getSelectionIndices();
+							Book book = books.get(selectedItems[0]);
+						      result.setText(book.toString());
+						    }
+					});
+					composite.setContent(itemsList);
+						
+						
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					result.setText("server error");
+					//e1.printStackTrace();
+				}
+
+			}
+		});
+		btnNewButton.setBounds(345, 24, 116, 32);
+		btnNewButton.setText("searce");
+		
+		shell.setDefaultButton(btnNewButton);
+		
+		text = new Text(shell, SWT.BORDER);
+		text.setBounds(10, 24, 329, 32);
+		text.setFocus();
+		text.setText("blood"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+	}
+	
+	protected void createContentsOnlineNlmCatalog()  {
+		shell = new Shell();
+		shell.setImage(SWTResourceManager.getImage(test.class, "/Images/icon.PNG"));
+		shell.setBackgroundImage(SWTResourceManager.getImage(test.class, "/Images/search_background.jpg"));
+		shell.setSize(676, 458);
+		shell.setText("SWT Application");
+		
+		result = new  Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		result.setBounds(132, 62, 329, 248);	
+		result.setSize((int)(shell.getBounds().width / 2), (int)(shell.getBounds().height * 0.6));
+		
+		composite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		composite.setLocation(10, 62);
+		composite.setSize(shell.getBounds().width / 6, (int)(shell.getBounds().height * 0.6));
+		composite.setExpandHorizontal(true);
+		composite.setExpandVertical(true);
+		GridLayout gl = new GridLayout();
+		gl.numColumns = 1;
+		
+		org.eclipse.swt.widgets.List itemsList = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		
+		Button btnNewButton = new Button(shell, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Client clientSearch = new Client();
+				try {
+					clientSearch.InitialConnection();
+					result.setText(" ");
+					
+					List<String> titles = clientSearch.onlineSearch(text.getText());
+					for (String str: titles)
+						itemsList.add(str);
+						
+					itemsList.addSelectionListener(new SelectionListener() {
+					public void widgetSelected(SelectionEvent event) {
+						int[] selectedItems = itemsList.getSelectionIndices();
+						String str = titles.get(selectedItems[0]);
+					      result.setText(str.toString());
+					    } // לשנות לפניה לשרת לשלוף מאמר שלם
+
+					    public void widgetDefaultSelected(SelectionEvent event) {
+							int[] selectedItems = itemsList.getSelectionIndices();
+							String str = titles.get(selectedItems[0]);
+						      result.setText(str.toString());
+						    } // 
+					});
+					composite.setContent(itemsList);
+						
+						
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					result.setText("server error");
+					//e1.printStackTrace();
+				}
+
+			}
+		});
+		btnNewButton.setBounds(345, 24, 116, 32);
+		btnNewButton.setText("searce");
+		
+		shell.setDefaultButton(btnNewButton);
+		
+		text = new Text(shell, SWT.BORDER);
+		text.setBounds(10, 24, 329, 32);
+		text.setFocus();
+		text.setText("blood"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 	}
 }
