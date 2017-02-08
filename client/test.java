@@ -1,4 +1,4 @@
-	package client;
+package client;
 
 import java.util.List;
 
@@ -98,13 +98,6 @@ public class test {
 				Client client = new Client();
 				try {
 					result.setText(" ");
-					//String tmp = client.testQuary3(text.getText());
-					/*if (tmp =="")
-						result.setText("No result");
-						
-						else
-						result.setText(tmp);*/
-					// hey how are you
 					
 					List<Article> art = client.testQuary4(text.getText());
 					for (Article article: art)
@@ -250,6 +243,7 @@ public class test {
 					result.setText(" ");
 					
 					List<String> titles = clientSearch.onlineSearch(text.getText());
+					itemsList.removeAll(); // ניקוי היסטוריה
 					for (String str: titles)
 						itemsList.add(str);
 						

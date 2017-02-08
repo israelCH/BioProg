@@ -26,13 +26,15 @@
 
 package client;
 
-import java.io.BufferedReader;
+//import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -72,193 +74,12 @@ public class Client {
 	private static String ServerAddress;
 	private static int ServerPort;
 	Socket sock;
-	PrintWriter output;
-	BufferedReader input;
+	ObjectOutputStream output;
+	ObjectInputStream input;
 	
 	public static void main(String[] args) throws Exception{	
 		
-		// -----------------------------------------------------------------------------------
-		// -----------   הפרדה בין מה שאנחנו כותבים למה שאלישי כתב לנו בהתחלה    -------------
-		// -----------------------------------------------------------------------------------
-
-		
-		//Persistent agent
-		//PersistAgent persistAgent = new PersistAgent();
-		
-		/*--------------------------------------------------------------------------------
-		 * Example 1: Fetching articles from Pubmed
-		 *--------------------------------------------------------------------------------
-		*/
-		
-		/*---
-		Query query = new Query();
-		query.setDatabase(DBType.PUBMED);
-		query.addId("23371018");
-		query.addId("10227670");
-		query.setSearchType(SearchType.FETCH);
-		
-		// Calling Entrez
-		Document xmlDocs = Entrez.callEntrez(query);
-		
-		// Parse answer into a list of articles
-		PubmedParser parser = new PubmedParser(xmlDocs);
-		parser.parse();
-		List<Article> articles = parser.getArticles();
-		
-		for (Article article: articles){
-			persistAgent.PersistObject(article);
-		}
-		
-		// print persisted articles
-		persistAgent.showObjects(Article.ENTITY_NAME);
-		
-		// get persisted articles back and print their abstracts from files
-		List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
-		for (int i = 0; i < articlesPer.size(); i++){
-			Article article = (Article) articlesPer.get(i);
-			System.out.println(article.getAbstract());
-			System.out.println("---------------------------------------");
-		}
-		----*/
-		
-		/*--------------------------------------------------------------------------------
-		 * Example 2: searching articles in nlmCatalog
-		 *--------------------------------------------------------------------------------
-		*/
-		
-//		Query query6 = new Query();
-//		query6.setDatabase(DBType.NLM_catalog);
-		//query6.setDatabase(DBType.PUBMED);
-//		query6.addTerm("breast");
-//		query6.addTerm("cancer");
-		//query6.addField(SearchFields.JOURNAL,          "science");
-		//query6.addField(SearchFields.PUBLICATION_DATA, "2009"   );
-//		query6.setSearchType(SearchType.SEARCH);
-//		List<String> results = Entrez.searchEntrez(query6);
-//		
-//		for (String result: results)
-//			System.out.println(result);
-//		
-//		Query Fquery = new Query();
-//		Fquery.setDatabase(DBType.NLM_catalog);
-//		for (String result: results)
-//		Fquery.addId(result);
-//		Fquery.setSearchType(SearchType.FETCH);
-		
-		// Calling Entrez
-//		Document FxmlDocs = Entrez.callEntrez(Fquery);
-
-		// Parse answer into a list of articles
-//		NLMparser Fparser = new NLMparser(FxmlDocs);
-//		Fparser.parse();
-//		List<Book> Fbooks = Fparser.getBooks();
-//		
-//		for (Book book: Fbooks){
-//			persistAgent.PersistObject(book);
-//		}
-		
-		// print persisted articles
-		//persistAgent.showObjects(Book.ENTITY_NAME);
-		
-		// get persisted book back and print their abstracts from files
-//		List<Persistable> FbookPer = persistAgent.getObjectsList(Book.ENTITY_NAME);
-//		for (int i = 0; i < FbookPer.size(); i++){
-//			Book book = (Book) FbookPer.get(i);
-//			System.out.println(book.getAbstract());
-//			System.out.println("---------------------------------------");
-//		}
-
-		/*--------------------------------------------------------------------------------
-		 * Example 3: searching articles in pubmed
-		 *--------------------------------------------------------------------------------
-		*/
-		
-		/*Query query2 = new Query();
-		query2.setDatabase(DBType.PUBMED);
-		query2.addTerm("breast");
-		query2.addTerm("cancer");
-		query2.addField(SearchFields.JOURNAL,          "science");
-		query2.addField(SearchFields.PUBLICATION_DATA, "2009"   );
-		query2.setSearchType(SearchType.SEARCH);
-		List<String> results = Entrez.searchEntrez(query2);
-		
-		for (String result: results)
-			System.out.println(result);*/
-		
-		
-		
-		/*--------------------------------------------------------------------------------
-	     * Example 4: Retrieving diseases from MalaCards database
-		 *--------------------------------------------------------------------------------
-		*/
-		
-		/*
-		Query query3 = new Query();
-		query3.setDatabase(DBType.MALA_CARDS);
-		query3.addTerm("aneurysm");
-		org.jsoup.nodes.Document results2 = MalaCards.callMalaCards(query3);
-		
-		MalaCardsParser parser2 = new  MalaCardsParser(results2, query3);
-		parser2.parse();
-		List<Disease> diseases = parser2.getDiseases();
-
-		for (Disease disease: diseases){
-			persistAgent.PersistObject(disease);
-		}
-		
-		persistAgent.showObjects(Disease.ENTITY_NAME);
-		*/
-		
-		/*--------------------------------------------------------------------------------
-	     * Example 5: Retrieving models from the Biomodels database
-		 * according to their ids
-		 *--------------------------------------------------------------------------------
-		*/   
-		
-		/*
-		Query query4 = new Query();
-		query4.setDatabase(DBType.BIO_MODELS);
-		query4.addId("BIOMD0000000058");
-		query4.addId("BIOMD0000000291");
-		
-		List<Document> res = Biomodels.callBiomodels(query4);
-		BiomodelsParser parser3 = new BiomodelsParser(res, query4.getIds());
-		parser3.parse();
-		List<Model> models = parser3.getModels();
-		
-		for (Model model: models){
-			persistAgent.PersistObject(model);
-		}
-		
-		persistAgent.showObjects(Model.ENTITY_NAME);
-		 */
-		/*--------------------------------------------------------------------------------
-	     * Query: Retrieving aneurysms' models from local repository
-	     * Data was downloaded from the aneurisk web repository at: 
-	     * and stored in the 'modelPath' library which was specified
-	     * in the beginning of this class 
-		 *--------------------------------------------------------------------------------
-	    */
-	    
-		/*
-		String[] aneurysmIds = getAneurysmModelsIds();
-		
-		for (String model: aneurysmIds){
-			CSVparser cParser = new CSVparser
-					(modelsPath + model +"/manifest.csv");
-			cParser.parse();
-			Aneurysm aneurysm = cParser.getAneurysm();
-			aneurysm.setImage(modelsPath + model + "/image.png");
-			aneurysm.setSTLmodel(modelsPath + model + "/surface/model.stl");
-			persistAgent.PersistObject(aneurysm);
-		}
-		persistAgent.showObjects(Aneurysm.ENTITY_NAME);
-		 */
 	}
-	
-	//--------------------------------------------------------------------------------
-	// HELPERS
-	//--------------------------------------------------------------------------------
 	
 	// Scan aneurysms folder (that contains the aneurisk repository for data retrieval
 	private static String[] getAneurysmModelsIds(){
@@ -481,50 +302,26 @@ public class Client {
 	
 	public List<String> onlineSearch (String str)throws Exception // פונה לשרת
 	{
-		// יצרנו כבר תקשורת חוץ בפונקצית איתחול תקשורת
-		output.println(str); // שולחים בפועל את הטקסט לחיפוש
-		String answer = input.readLine();
+		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
+		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
+		// השרת מחכה לנו - מעבד ומחזיר את המחרוזת
+		//String answer = input.readLine(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
+		String answer = (String) input.readObject(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
 		
-		// ---- להשלים שהשרת יחזיר רשימה של מחרוזות עם פסיקים ואנחנו נפענח לליסט ונחזיר ללקוח -----
-		// ---- להשלים שהשרת יחזיר רשימה של מחרוזות עם פסיקים ואנחנו נפענח לליסט ונחזיר ללקוח -----
-		// ---- להשלים שהשרת יחזיר רשימה של מחרוזות עם פסיקים ואנחנו נפענח לליסט ונחזיר ללקוח -----
-		
-		List<String> results;
-		
+		String[] list = answer.split(";");
+		List<String> results= Arrays.asList(list);	
 		return results;
-		
-		// מפה - זה יעבור לשרת
-//		String[] terms = str.split("\\s+");
-//		Query query6 = new Query();
-//		query6.setDatabase(DBType.NLM_catalog);
-//		query6.setSearchType(SearchType.SEARCH);
-//		for (int i = 0; i<terms.length; i++)
-//			query6.addTerm(terms[i]);
-//		List<String> results = Entrez.searchEntrez(query6);
-//				
-//		PersistAgent persistAgent = new PersistAgent();
-//		Query query = new Query();
-//		query.setDatabase(DBType.NLM_catalog);
-//		query.setSearchType(SearchType.FETCH);
-//		for (String id: results)
-//			query.addId(id);
-//		
-//		// Calling Entrez
-//		Document xmlDocs = Entrez.callEntrez(query);
-//		
-//		// Parse answer into a list of books
-//		NLMparser parser = new NLMparser(xmlDocs);
-//		parser.parse();
-//		List<Book> books = parser.getBooks();
-//		
-//		return results;
 	}
 	
 	public void InitialConnection() throws Exception {
-		ServerAddress = "127.0.0.1";
-		ServerPort = 9095;
+		System.out.println("before socket.");
+		ServerAddress = "127.0.0.1"; // <----- localhost
+		ServerPort = 9898;
 		sock = new Socket(ServerAddress,ServerPort);
-		input = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-		output = new PrintWriter(sock.getOutputStream(),true);
+		System.out.println("after socket.");
+		//input = new ObjectInputStream(sock.getInputStream());
+		System.out.println("after input.");
+		output = new ObjectOutputStream(sock.getOutputStream());
+		System.out.println("after initial.");
 	}
 }
