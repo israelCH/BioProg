@@ -1,5 +1,4 @@
-ID: 101698039
-TITLE:  Basic & applied concepts of blood banking and transfusion practices
-AUTHOR: PR Howard Paula R
-AUTHOR: KD Blaney Kathy D
-24/06/2016
+ID: 101698872
+TITLE:  A beginners guide to blood cells
+AUTHOR: BJ Bain Barbara J
+19/01/2017
