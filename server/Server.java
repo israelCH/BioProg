@@ -1,11 +1,8 @@
 package server;
 
-//import java.io.BufferedReader;
 import java.io.IOException;
-//import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-//import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -17,12 +14,19 @@ import database.DataBase.DBType;
 import database.Query.SearchType;
 import parsers.NLMparser;
 import persistentdatabase.main.PersistAgent;
+import persistentdatabase.main.PersistAgentFactory;
 import persistentdatabase.model.Book;
 import urlInterfaces.Entrez;
 
-import org.apache.commons.lang.SerializationUtils;
+//import org.apache.commons.lang.SerializationUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 public class Server {
+	
+	//private EntityManager entityManager = EntityManagerUtil.getEntityManager();
+	
     public static void main(String[] args) throws Exception {
         System.out.println("The capitalization server is running.");
         int clientNumber = 0;
@@ -55,12 +59,19 @@ public class Server {
                     String input;
                     List<Book> res;
 					try {
-						input = (String) in.readObject();
+						input = (String) in.readObject(); // קריאה ראשונה של קוד פעולה
 	                    if (input != null && !input.equals("")) {
-	                    	res = searchFunction(input);
-	                    	for (Book book: res)
-	                    		out.writeObject(book);
-	                    		//out.writeObject(SerializationUtils.serialize(book));
+	                    	switch (input) {
+							case "01": // חיפוש באינטרנט
+								input = (String) in.readObject(); // קריאה שניה לקבל את המחרוזת לחיפוש
+		                    	res = searchFunction(input);
+		                    	out.writeObject(res);
+							case "02": // שמירה בדטא-בייס פנימי
+								List<Book> data = (List<Book>) in.readObject();
+								saveLocalFunction(data);
+							default:
+								break;
+							}
 	                    }
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -115,6 +126,18 @@ public class Server {
     	
 		} catch (Exception e1) {
 			return null;
+		}
+    }
+    
+    private static Boolean saveLocalFunction(List<Book> books) {
+    	try {
+    		EntityManager entityManager = PersistAgentFactory.getEntityManager();
+    		entityManager.getTransaction().begin();
+    		entityManager.persist(books.get(0));
+
+    		return true;
+		} catch (Exception e1) {
+			return false;
 		}
     }
 }

@@ -306,18 +306,10 @@ public class Client {
 	public List<Book> onlineSearch (String str)throws Exception // פונה לשרת
 	{
 		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
+		output.writeObject("01"); // שולחים קוד שאומר חיפוש
 		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
-		// השרת מחכה לנו - מעבד ומחזיר את המחרוזת
-		//String answer = input.readLine(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
-		
-		List<Book> answer = new ArrayList<Book>();
-		Book ans = (Book) input.readObject(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
-		while(ans != null) {
-			answer.add(ans);
-			ans = (Book) input.readObject();
-		}
-		
-		//List<Book> answer = (List<Book>) input.readObject();
+		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
+		List<Book> answer = (List<Book>) input.readObject();
 		return answer;
 		
 		//Book[] list = answer.split(";");
@@ -325,15 +317,28 @@ public class Client {
 		//return results;
 	}
 	
+	public Boolean onlineSaveLocal (List<Book> data)throws Exception // פונה לשרת
+	{
+		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
+		output.writeObject("02-" + data); // שולחים בפועל את הטקסט לחיפוש
+		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
+		List<Book> answer = (List<Book>) input.readObject();
+		return true;
+		
+		//Book[] list = answer.split(";");
+		//List<Book> results= Arrays.asList(list);	
+		//return results;
+	}
+	
 	public void InitialConnection() throws Exception {
-		System.out.println("before socket.");
+		//System.out.println("before socket.");
 		ServerAddress = "127.0.0.1"; // <----- localhost
 		ServerPort = 9898;
 		sock = new Socket(ServerAddress,ServerPort);
-		System.out.println("trying open output.");
+		//System.out.println("trying open output.");
 		output = new ObjectOutputStream(sock.getOutputStream());
-		System.out.println("trying open input.");
+		//System.out.println("trying open input.");
 		input = new ObjectInputStream(sock.getInputStream());
-		System.out.println("input and output r opened.");
+		//System.out.println("input and output r opened.");
 	}
 }

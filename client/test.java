@@ -276,6 +276,47 @@ public class test {
 		
 		shell.setDefaultButton(btnNewButton);
 		
+		Button saveButton = new Button(shell, SWT.NONE);
+		saveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Client clientSearch = new Client();
+				try {
+					clientSearch.InitialConnection();
+					result.setText(" ");
+					
+					List<Book> books = clientSearch.onlineSearch(text.getText());
+					itemsList.removeAll(); // ניקוי היסטוריה
+					for (Book str: books)
+						itemsList.add(str.getTitle());
+						
+					itemsList.addSelectionListener(new SelectionListener() {
+					public void widgetSelected(SelectionEvent event) {
+						int[] selectedItems = itemsList.getSelectionIndices();
+						Book str = books.get(selectedItems[0]);
+					      result.setText(str.toString());
+					    } // לשנות לפניה לשרת לשלוף מאמר שלם
+
+					    public void widgetDefaultSelected(SelectionEvent event) {
+							int[] selectedItems = itemsList.getSelectionIndices();
+							Book str = books.get(selectedItems[0]);
+						      result.setText(str.toString());
+						    } // 
+					});
+					composite.setContent(itemsList);
+						
+						
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					result.setText("server error:" + e1.toString());
+					//e1.printStackTrace();
+				}
+
+			}
+		});
+		saveButton.setBounds(345, 24, 116, 32);
+		saveButton.setText("save to local");
+		
 		text = new Text(shell, SWT.BORDER);
 		text.setBounds(10, 24, 329, 32);
 		text.setFocus();

@@ -3,6 +3,9 @@ package persistentdatabase.model;
 import java.io.Serializable;
 
 public class BookAuthor implements Serializable {
+
+	private static final long serialVersionUID = 2L;
+
 	public BookAuthor(String lastName, String firstName, String initials, String coll) {
 		super();
 		LastName = lastName;
