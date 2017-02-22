@@ -1,6 +1,7 @@
 package persistentdatabase.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Book implements Persistable {
+public class Book implements Persistable, Serializable {
 
 	public Book() {
 		super();

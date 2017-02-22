@@ -20,6 +20,8 @@ import persistentdatabase.main.PersistAgent;
 import persistentdatabase.model.Book;
 import urlInterfaces.Entrez;
 
+import org.apache.commons.lang.SerializationUtils;
+
 public class Server {
     public static void main(String[] args) throws Exception {
         System.out.println("The capitalization server is running.");
@@ -51,10 +53,14 @@ public class Server {
 
                 while (true) {
                     String input;
+                    List<Book> res;
 					try {
 						input = (String) in.readObject();
 	                    if (input != null && !input.equals("")) {
-	                    	out.writeObject(searchFunction(input));
+	                    	res = searchFunction(input);
+	                    	for (Book book: res)
+	                    		out.writeObject(book);
+	                    		//out.writeObject(SerializationUtils.serialize(book));
 	                    }
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
@@ -74,7 +80,7 @@ public class Server {
         }
     }
     
-    private static String searchFunction(String str) {
+    private static List<Book> searchFunction(String str) {
     	try {
     	//String result =""; 
 		String[] terms = str.split("\\s+");
@@ -99,13 +105,16 @@ public class Server {
 		NLMparser parser = new NLMparser(xmlDocs);
 		parser.parse();
 		List<Book> books = parser.getBooks();
-		String backString = "";
-		for (Book book: books)
-			backString += book.getTitle() + ";";		
-    	return backString.substring(0,backString.length() - 1);	
+		return books;
+		
+		// מפה זה אם רוצים להחזיר סטרינג אחד ארוך - אבל שינינו שיחזיר מערך אוביקטים
+//		String backString = "";
+//		for (Book book: books)
+//			backString += book.getTitle() + ";";		
+//    	return backString.substring(0,backString.length() - 1);	
     	
 		} catch (Exception e1) {
-			return "Server Search error";
+			return null;
 		}
     }
 }

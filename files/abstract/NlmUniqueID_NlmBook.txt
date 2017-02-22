@@ -1,4 +1,8 @@
-ID: 101698872
-TITLE:  A beginners guide to blood cells
-AUTHOR: BJ Bain Barbara J
-19/01/2017
+ID: 101699752
+TITLE:  ECMO in the adult patient
+AUTHOR: A Vuylsteke Alain
+AUTHOR: D Brodie Daniel
+AUTHOR: A Combes Alain
+AUTHOR: JA Fowles Jo-Anne
+AUTHOR: GJ Peek G J
+02/02/2017

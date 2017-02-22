@@ -34,6 +34,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,6 +64,8 @@ import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
 import persistentdatabase.model.Model;
 import persistentdatabase.model.Persistable;
+
+import org.apache.commons.lang.SerializationUtils;
 
 
 public class Client {
@@ -300,17 +303,26 @@ public class Client {
 		return books;
 	}
 	
-	public List<String> onlineSearch (String str)throws Exception // פונה לשרת
+	public List<Book> onlineSearch (String str)throws Exception // פונה לשרת
 	{
 		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
 		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
 		// השרת מחכה לנו - מעבד ומחזיר את המחרוזת
 		//String answer = input.readLine(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
-		String answer = (String) input.readObject(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
 		
-		String[] list = answer.split(";");
-		List<String> results= Arrays.asList(list);	
-		return results;
+		List<Book> answer = new ArrayList<Book>();
+		Book ans = (Book) input.readObject(); // השרת שלח תשובה ןהיא נמצאת ב-אינפוט
+		while(ans != null) {
+			answer.add(ans);
+			ans = (Book) input.readObject();
+		}
+		
+		//List<Book> answer = (List<Book>) input.readObject();
+		return answer;
+		
+		//Book[] list = answer.split(";");
+		//List<Book> results= Arrays.asList(list);	
+		//return results;
 	}
 	
 	public void InitialConnection() throws Exception {
@@ -318,10 +330,10 @@ public class Client {
 		ServerAddress = "127.0.0.1"; // <----- localhost
 		ServerPort = 9898;
 		sock = new Socket(ServerAddress,ServerPort);
-		System.out.println("after socket.");
-		//input = new ObjectInputStream(sock.getInputStream());
-		System.out.println("after input.");
+		System.out.println("trying open output.");
 		output = new ObjectOutputStream(sock.getOutputStream());
-		System.out.println("after initial.");
+		System.out.println("trying open input.");
+		input = new ObjectInputStream(sock.getInputStream());
+		System.out.println("input and output r opened.");
 	}
 }

@@ -242,21 +242,21 @@ public class test {
 					clientSearch.InitialConnection();
 					result.setText(" ");
 					
-					List<String> titles = clientSearch.onlineSearch(text.getText());
+					List<Book> books = clientSearch.onlineSearch(text.getText());
 					itemsList.removeAll(); // ניקוי היסטוריה
-					for (String str: titles)
-						itemsList.add(str);
+					for (Book str: books)
+						itemsList.add(str.getTitle());
 						
 					itemsList.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent event) {
 						int[] selectedItems = itemsList.getSelectionIndices();
-						String str = titles.get(selectedItems[0]);
+						Book str = books.get(selectedItems[0]);
 					      result.setText(str.toString());
 					    } // לשנות לפניה לשרת לשלוף מאמר שלם
 
 					    public void widgetDefaultSelected(SelectionEvent event) {
 							int[] selectedItems = itemsList.getSelectionIndices();
-							String str = titles.get(selectedItems[0]);
+							Book str = books.get(selectedItems[0]);
 						      result.setText(str.toString());
 						    } // 
 					});
@@ -265,7 +265,7 @@ public class test {
 						
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
-					result.setText("server error");
+					result.setText("server error:" + e1.toString());
 					//e1.printStackTrace();
 				}
 

@@ -1,6 +1,8 @@
 package persistentdatabase.model;
 
-public class BookAuthor {
+import java.io.Serializable;
+
+public class BookAuthor implements Serializable {
 	public BookAuthor(String lastName, String firstName, String initials, String coll) {
 		super();
 		LastName = lastName;
