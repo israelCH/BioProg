@@ -1,8 +1,4 @@
-ID: 101699752
-TITLE:  ECMO in the adult patient
-AUTHOR: A Vuylsteke Alain
-AUTHOR: D Brodie Daniel
-AUTHOR: A Combes Alain
-AUTHOR: JA Fowles Jo-Anne
-AUTHOR: GJ Peek G J
-02/02/2017
+ID: 101700625
+TITLE:  Medicare market shares of mail-order diabetes test strips from July through September 2016
+AUTHOR: null null null
+15/02/2017

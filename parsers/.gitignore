@@ -4,3 +4,6 @@
 /PubmedParser.class
 /XMLparser.class
 /NLMparser.class
+/GeneParser.class
+/ProteinParser.class
+/OMIMParser.class
