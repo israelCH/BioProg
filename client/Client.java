@@ -65,6 +65,7 @@ import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Model;
 import persistentdatabase.model.Persistable;
+import persistentdatabase.model.Protein;
 
 import org.apache.commons.lang.SerializationUtils;
 
@@ -110,13 +111,13 @@ public class Client {
 //		
 //	}
 	
-	public List<Gene> onlineSearch (String str)throws Exception // פונה לשרת
+	public List<Protein> onlineSearch (String str)throws Exception // פונה לשרת
 	{
 		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
 		output.writeObject("01"); // שולחים קוד שאומר חיפוש
 		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
 		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
-		List<Gene> answer = (List<Gene>) input.readObject();
+		List<Protein> answer = (List<Protein>) input.readObject();
 		return answer;
 		
 		//Book[] list = answer.split(";");

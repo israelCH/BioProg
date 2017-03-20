@@ -14,10 +14,12 @@ import database.DataBase.DBType;
 import database.Query.SearchType;
 import parsers.GeneParser;
 import parsers.NLMparser;
+import parsers.ProteinParser;
 import persistentdatabase.main.PersistAgent;
 import persistentdatabase.main.PersistAgentFactory;
 import persistentdatabase.model.Book;
 import persistentdatabase.model.Gene;
+import persistentdatabase.model.Protein;
 import urlInterfaces.Entrez;
 
 //import org.apache.commons.lang.SerializationUtils;
@@ -59,7 +61,7 @@ public class Server {
 
                 while (true) {
                     String input;
-                    List<Gene> res;
+                    List<Protein> res;
 					try {
 						input = (String) in.readObject(); // קריאה ראשונה של קוד פעולה
 	                    if (input != null && !input.equals("")) {
@@ -93,12 +95,12 @@ public class Server {
         }
     }
     
-    private static List<Gene> searchFunction(String str) {
+    private static List<Protein> searchFunction(String str) {
     	try {
     	//String result =""; 
 		String[] terms = str.split("\\s+");
 		Query query = new Query();
-		query.setDatabase(DBType.GENE);
+		query.setDatabase(DBType.PROTEIN);
 		query.setSearchType(SearchType.SEARCH);
 		for (int i = 0; i<terms.length; i++)
 			query.addTerm(terms[i]);		
@@ -106,7 +108,7 @@ public class Server {
 				
 		//PersistAgent persistAgent = new PersistAgent();
 		query = new Query();
-		query.setDatabase(DBType.GENE);
+		query.setDatabase(DBType.PROTEIN);
 		query.setSearchType(SearchType.FETCH);
 		for (String id: results)
 			query.addId(id);
@@ -115,10 +117,10 @@ public class Server {
 		Document xmlDocs = Entrez.callEntrez(query);
 		
 		// Parse answer into a list of books
-		GeneParser parser = new GeneParser(xmlDocs);
+		ProteinParser parser = new ProteinParser(xmlDocs);
 		parser.parse();
-		List<Gene> genes = parser.getGenes();
-		return genes;
+		List<Protein> proteins = parser.getProteins();
+		return proteins;
 		
 		// מפה זה אם רוצים להחזיר סטרינג אחד ארוך - אבל שינינו שיחזיר מערך אוביקטים
 //		String backString = "";

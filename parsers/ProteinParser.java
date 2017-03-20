@@ -52,40 +52,40 @@ public class ProteinParser extends XMLparser {
 		for(Element item : itemsList) {
 			switch (getAttrContent(item, "Name")) {
 				case "Caption":
-					protein.setCaption(getAttrContent(item, "Name"));
+					protein.setCaption(getTextContent(item));
 					break;
 				case "Title":
-					protein.setTitle(getAttrContent(item, "Name"));
+					protein.setTitle(getTextContent(item));
 					break;
 				case "Gi":
-					protein.setGi(Integer.parseInt(getAttrContent(item, "Name")));
+					protein.setGi(Integer.parseInt(getTextContent(item)));
 					break;
 				case "CreateDate":
-					protein.setCreateDate(getAttrContent(item, "Name"));
+					protein.setCreateDate(getTextContent(item));
 					break;
 				case "UpdateDate":
-					protein.setUpdateDate(getAttrContent(item, "Name"));
+					protein.setUpdateDate(getTextContent(item));
 					break;
 				case "Flags":
-					protein.setFlags(Integer.parseInt(getAttrContent(item, "Name")));
+					protein.setFlags(Integer.parseInt(getTextContent(item)));
 					break;
 				case "TaxID":
-					protein.setTaxID(Integer.parseInt(getAttrContent(item, "Name")));
+					protein.setTaxID(Integer.parseInt(getTextContent(item)));
 					break;
 				case "Length":
-					protein.setLength(Integer.parseInt(getAttrContent(item, "Name")));
+					protein.setLength(Integer.parseInt(getTextContent(item)));
 					break;
 				case "Status":
-					protein.setStatus(getAttrContent(item, "Name"));
+					protein.setStatus(getTextContent(item));
 					break;
 				case "ReplacedBy":
-					protein.setReplacedBy(getAttrContent(item, "Name"));
+					protein.setReplacedBy(getTextContent(item));
 					break;
 				case "Comment":
-					protein.setComment(getAttrContent(item, "Name"));
+					protein.setComment(getTextContent(item));
 					break;
 				case "AccessionVersion":
-					protein.setAccessionVersion(getAttrContent(item, "Name"));
+					protein.setAccessionVersion(getTextContent(item));
 					break;
 			}
 		}

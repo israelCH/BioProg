@@ -26,6 +26,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import persistentdatabase.model.Article;
 import persistentdatabase.model.Book;
 import persistentdatabase.model.Gene;
+import persistentdatabase.model.Protein;
 
 import org.eclipse.swt.widgets.Composite;
 
@@ -243,21 +244,21 @@ public class test {
 					clientSearch.InitialConnection();
 					result.setText(" ");
 					
-					List<Gene> books = clientSearch.onlineSearch(text.getText());
+					List<Protein> books = clientSearch.onlineSearch(text.getText());
 					itemsList.removeAll(); // ניקוי היסטוריה
-					for (Gene str: books)
-						itemsList.add(str.getName());
+					for (Protein str: books)
+						itemsList.add(str.getTitle());
 						
 					itemsList.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent event) {
 						int[] selectedItems = itemsList.getSelectionIndices();
-						Gene str = books.get(selectedItems[0]);
+						Protein str = books.get(selectedItems[0]);
 					      result.setText(str.toString());
 					    } // לשנות לפניה לשרת לשלוף מאמר שלם
 
 					    public void widgetDefaultSelected(SelectionEvent event) {
 							int[] selectedItems = itemsList.getSelectionIndices();
-							Gene str = books.get(selectedItems[0]);
+							Protein str = books.get(selectedItems[0]);
 						      result.setText(str.toString());
 						    } // 
 					});
@@ -286,21 +287,21 @@ public class test {
 					clientSearch.InitialConnection();
 					result.setText(" ");
 					
-					List<Gene> books = clientSearch.onlineSearch(text.getText());
+					List<Protein> books = clientSearch.onlineSearch(text.getText());
 					itemsList.removeAll(); // ניקוי היסטוריה
-					for (Gene str: books)
-						itemsList.add(str.getName());
+					for (Protein str: books)
+						itemsList.add(str.getTitle());
 						
 					itemsList.addSelectionListener(new SelectionListener() {
 					public void widgetSelected(SelectionEvent event) {
 						int[] selectedItems = itemsList.getSelectionIndices();
-						Gene str = books.get(selectedItems[0]);
+						Protein str = books.get(selectedItems[0]);
 					      result.setText(str.toString());
 					    } // לשנות לפניה לשרת לשלוף מאמר שלם
 
 					    public void widgetDefaultSelected(SelectionEvent event) {
 							int[] selectedItems = itemsList.getSelectionIndices();
-							Gene str = books.get(selectedItems[0]);
+							Protein str = books.get(selectedItems[0]);
 						      result.setText(str.toString());
 						    } // 
 					});

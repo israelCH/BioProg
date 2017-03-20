@@ -66,11 +66,11 @@ public abstract class XMLparser {
 	}
 	
 	protected  String getAttrContent(Element el, String name) { // מחזיר תוכן של אטריביוט בתוך תאג
-		
 		NodeList children = el.getChildNodes();
-		for(int i=0; i<children.getLength(); i++) {
+		for(int i=0; i<children.getLength();i++) {
 			Node child = children.item(i);
-			return child.getAttributes().getNamedItem(name).getNodeValue();
+			//return child.getAttributes().getNamedItem(name).getNodeValue();
+			return el.getAttribute(name);
 		}
 		return "";
 	}
