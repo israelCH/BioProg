@@ -96,7 +96,7 @@ public class Server {
     	//String result =""; 
 		String[] terms = str.split("\\s+");
 		Query query = new Query();
-		query.setDatabase(DBType.NLM_catalog);
+		query.setDatabase(DBType.PUBMED);
 		query.setSearchType(SearchType.SEARCH);
 		for (int i = 0; i<terms.length; i++)
 			query.addTerm(terms[i]);		
@@ -104,7 +104,7 @@ public class Server {
 				
 		//PersistAgent persistAgent = new PersistAgent();
 		query = new Query();
-		query.setDatabase(DBType.NLM_catalog);
+		query.setDatabase(DBType.PUBMED);
 		query.setSearchType(SearchType.FETCH);
 		for (String id: results)
 			query.addId(id);

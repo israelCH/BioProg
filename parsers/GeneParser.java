@@ -8,13 +8,15 @@ import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+//import org.w3c.dom.Node;
+//import org.w3c.dom.NodeList;
 
-import persistentdatabase.model.Article;
+//import javafx.css.ParsedValue;
+import persistentdatabase.model.Gene;
+//import persistentdatabase.model.GeneLocHist;
 
 public class GeneParser extends XMLparser {
-	List<Article> _articles = new ArrayList<Article>(); // ??????????????? real type !!!!
+	List<Gene> _genes = new ArrayList<Gene>();
 	
 	public GeneParser(Document doc) throws Exception {
 
@@ -27,103 +29,98 @@ public class GeneParser extends XMLparser {
 		}
 	}
 	
-	public List<Article> getArticles(){  // ??????????????? real type !!!!
-		return _articles;
+	public List<Gene> getGenes(){
+		return _genes;
 	}
 	
 	public void parse(){
 		Element rootEl = _doc.get(0).getDocumentElement();
-		List<Element> pubmedArticleElements = getChildrensByName(rootEl, "PubmedArticle");
+		Element subRootEl = getChildByName(rootEl, "DocumentSummarySet");
+		List<Element> geneElements = getChildrensByName(subRootEl, "DocumentSummary");
 		
-		if (pubmedArticleElements.size() == 0) 
-			System.err.println("No articles found in document.");
+		if (geneElements.size() == 0) {
+			System.err.println("No genes found in document.");
+			return;
+		}
 		
-		for(Element pubmedArticle : pubmedArticleElements) 
-			_articles.add(parseSingleArticle(pubmedArticle));
+		for(Element geneElement : geneElements) 
+			_genes.add(parseSingleArticle(geneElement));
 	}
 	
-	private Article parseSingleArticle(Element pubmedArticleEl) {
+	private Gene parseSingleArticle(Element geneEl) {
+		Gene gene = new Gene();
+		Element elem2;
+		Element elem = getChildByName(geneEl, "Name");
+		gene.setName(getTextContent(elem));
 		
-		Element medlineCitationEl = getChildByName(pubmedArticleEl, "MedlineCitation");
+		elem = getChildByName(geneEl, "Description");
+		gene.setDesc(getTextContent(elem));
 		
-		Element idEl = getChildByName(medlineCitationEl, "PMID");
-		String  idStr = getTextContent(idEl);
+		elem = getChildByName(geneEl, "Status");
+		gene.setStatus(getTextContent(elem));
 		
-		Element articleEl = getChildByName(medlineCitationEl, "Article");
-		Element journalEl = getChildByName(articleEl, "Journal");
-		Element journalIssueEl = getChildByName(journalEl, "JournalIssue");
-		Element journalVolumeEl = getChildByName(journalIssueEl, "Volume");
-		Element issueEl = getChildByName(journalIssueEl, "Issue");
+		elem = getChildByName(geneEl, "Chromosome");
+		gene.setChromosom(Integer.parseInt(getTextContent(elem)));
 		
-		String volume = "?";
-		if (journalVolumeEl != null)
-			volume = getTextContent(journalVolumeEl);
+		elem = getChildByName(geneEl, "GeneticSource");
+		gene.setGeneticSource(getTextContent(elem));
 		
-		String issue = "?";
-		if (issueEl != null)
-			issue = getTextContent(issueEl);
+		elem = getChildByName(geneEl, "MapLocation");
+		gene.setMapLocation(getTextContent(elem));
 		
-		Element pubDateEl = getChildByName(journalIssueEl, "PubDate");
-		Element yearEl = getChildByName(pubDateEl, "Year");
-		String year = "";
-		if (yearEl != null)
-			year = getTextContent(yearEl);
-				
-		Element journalTitleEl = getChildByName(journalEl, "Title");
-		String journalTitle = getTextContent(journalTitleEl);
-			
-		Element authorsEl = getChildByName(articleEl, "AuthorList");
-		Element authorEl = getChildByName(authorsEl, "Author");
-		Element lastNameEl = getChildByName(authorEl, "LastName");
-		String lastName = getTextContent(lastNameEl);
-		Element foreNameEl = getChildByName(authorEl, "ForeName");
-		String foreName = getTextContent(foreNameEl);
-		String authors = lastName + " " + foreName;
+		elem = getChildByName(geneEl, "OtherAliases");
+		String temp = getTextContent(elem);
+		String[] terms = temp.split(",");
+		for (int i = 0; i < terms.length; i++) {
+			gene.addAlias(terms[i]);
+		}
 		
-		String DOI = "?";
-		Element DOI_El = getChildByName(articleEl, "ELocationID");
-		if (!(DOI_El==null))
-			DOI = getTextContent(DOI_El);
+		elem = getChildByName(geneEl, "Mim");
+		elem2 = getChildByName(elem, "Int");
+		if (elem2 != null)
+			gene.setMim(Integer.parseInt(getTextContent(elem2)));
 		
-		Element articleTitleEl = getChildByName(articleEl, "ArticleTitle");
-		String title = getTextContent(articleTitleEl);
+		elem = getChildByName(geneEl, "GenomicInfo");
+		elem2 = getChildByName(elem, "GenomicInfoType");
+		elem = getChildByName(elem2, "ChrStart");
+		gene.setRangeStart(Integer.parseInt(getTextContent(elem)));
+		elem = getChildByName(elem2, "ChrStop");
+		gene.setRangeStop(Integer.parseInt(getTextContent(elem)));
+		elem = getChildByName(elem2, "ExonCount");
+		gene.setExon(Integer.parseInt(getTextContent(elem)));
 		
-		Element abstractEl = getChildByName(articleEl, "Abstract");
-		StringBuilder absStr = new StringBuilder();
-
-		if (abstractEl != null) {
-			NodeList abstractChildren = abstractEl.getChildNodes();
-			for(int i=0; i<abstractChildren.getLength(); i++) {
-				Node child = abstractChildren.item(i);
-				if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("AbstractText")) {
-					absStr.append( getTextContent( (Element)child));
-				}
+		elem = getChildByName(geneEl, "Summary");
+		gene.setSummary(getTextContent(elem));
+		
+		elem = getChildByName(geneEl, "Organism");
+		gene.setOrganism(getTextContent(getChildByName(elem, "ScientificName")),
+				getTextContent(getChildByName(elem, "CommonName")), 
+				getTextContent(getChildByName(elem, "TaxID")) );
+		
+		elem = getChildByName(geneEl, "LocationHist");
+		List<Element> elemList = getChildrensByName(elem, "LocationHistType");
+		
+		if (elemList.size() != 0) {
+			for(Element loc : elemList) {
+				gene.addLocation(getTextContent(getChildByName(loc, "AnnotationRelease")), 
+						getTextContent(getChildByName(loc, "AssemblyAccVer")), 
+						getTextContent(getChildByName(loc, "ChrAccVer")), 
+						getTextContent(getChildByName(loc, "ChrStart")), 
+						getTextContent(getChildByName(loc, "ChrStop")) );
 			}
 		}
-		if (absStr.length() == 0)
-			absStr = new StringBuilder("?");
-		
-		Article article = new Article();
-		article.setDOI(DOI);
-		article.setAuthor(authors);
-		article.setId(idStr);
-		article.setJournal(journalTitle);
-		article.setVolume(volume);
-		article.setIssue(issue);
-		article.setYear(year);
-		article.setTitle(title.replace("\t", " "));
 		
 		try {
 			String projectPath = System.getProperty("user.dir");
-			String filePath = projectPath + "/files/abstract/" + idStr + "_abstract.txt";
+			String filePath = projectPath + "/files/abstract/" + gene.getId() + "_abstract.txt";
 			
 			File file = new File(filePath);
 			file.getParentFile().mkdirs();
 			PrintWriter out = new PrintWriter(file);
 			
-			String prtAbstract =  absStr.toString().replace("\t", " ");
-			out.println(prtAbstract);
-			article.setAbstract(filePath);
+//			String prtAbstract =  absStr.toString().replace("\t", " ");
+//			out.println(prtAbstract);
+//			article.setAbstract(filePath);
 			
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -131,7 +128,7 @@ public class GeneParser extends XMLparser {
 		}
 		// article.setAbstract(absStr.toString().replace("\t", " "));
 		
-		return article;
+		return gene;
 
 	}
 }
