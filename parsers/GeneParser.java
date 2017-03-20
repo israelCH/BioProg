@@ -60,6 +60,7 @@ public class GeneParser extends XMLparser {
 		gene.setStatus(getTextContent(elem));
 		
 		elem = getChildByName(geneEl, "Chromosome");
+		if (getTextContent(elem) != "")
 		gene.setChromosom(Integer.parseInt(getTextContent(elem)));
 		
 		elem = getChildByName(geneEl, "GeneticSource");
@@ -78,15 +79,21 @@ public class GeneParser extends XMLparser {
 		elem = getChildByName(geneEl, "Mim");
 		elem2 = getChildByName(elem, "Int");
 		if (elem2 != null)
-			gene.setMim(Integer.parseInt(getTextContent(elem2)));
+			if (getTextContent(elem) != "")
+				gene.setMim(Integer.parseInt(getTextContent(elem2)));
 		
 		elem = getChildByName(geneEl, "GenomicInfo");
 		elem2 = getChildByName(elem, "GenomicInfoType");
 		elem = getChildByName(elem2, "ChrStart");
+		if (getTextContent(elem) != "")
 		gene.setRangeStart(Integer.parseInt(getTextContent(elem)));
+		
 		elem = getChildByName(elem2, "ChrStop");
+		if (getTextContent(elem) != "")
 		gene.setRangeStop(Integer.parseInt(getTextContent(elem)));
+		
 		elem = getChildByName(elem2, "ExonCount");
+		if (getTextContent(elem) != "")
 		gene.setExon(Integer.parseInt(getTextContent(elem)));
 		
 		elem = getChildByName(geneEl, "Summary");

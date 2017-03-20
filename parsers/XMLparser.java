@@ -20,7 +20,7 @@ public abstract class XMLparser {
 	
 	public abstract void parse();
 	
-	protected List<Element> getChildrensByName(Element el, String childName) {
+	protected List<Element> getChildrensByName(Element el, String childName) { // מחזיר רשימת אלמנטים לפי שם תגית של אלמנט
 		NodeList children = el.getChildNodes();
 		List<Element> elements = new ArrayList<Element>(28);
 		for(int i=0; i<children.getLength(); i++) {
@@ -32,7 +32,7 @@ public abstract class XMLparser {
 		return elements;
 	}
 	
-	protected Element getChildByName(Element el, String childName) {
+	protected Element getChildByName(Element el, String childName) { // מחזיר אלמנט פנימי לפי שם
 		NodeList children = el.getChildNodes();
 		for(int i=0; i<children.getLength(); i++) {
 			Node child = children.item(i);
@@ -43,7 +43,7 @@ public abstract class XMLparser {
 		return null;
 	}
 	
-	protected  String getTextContent(Element el) {
+	protected  String getTextContent(Element el) { // מחזיר את הטקסט שבין התגיות
 		/*
 		NodeList children = el.getChildNodes();
 		for(int i=0; i<children.getLength(); i++) {
@@ -65,7 +65,7 @@ public abstract class XMLparser {
 		return answer;
 	}
 	
-	protected  String getAttrContent(Element el, String name) {
+	protected  String getAttrContent(Element el, String name) { // מחזיר תוכן של אטריביוט בתוך תאג
 		
 		NodeList children = el.getChildNodes();
 		for(int i=0; i<children.getLength(); i++) {

@@ -8,13 +8,11 @@ import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import persistentdatabase.model.Article;
+import persistentdatabase.model.Protein;
 
 public class ProteinParser extends XMLparser {
-	List<Article> _articles = new ArrayList<Article>(); // ??????????????? real type !!!!
+	List<Protein> _proteins = new ArrayList<Protein>();
 	
 	public ProteinParser(Document doc) throws Exception {
 
@@ -27,103 +25,82 @@ public class ProteinParser extends XMLparser {
 		}
 	}
 	
-	public List<Article> getArticles(){  // ??????????????? real type !!!!
-		return _articles;
+	public List<Protein> getProteins(){
+		return _proteins;
 	}
 	
 	public void parse(){
 		Element rootEl = _doc.get(0).getDocumentElement();
-		List<Element> pubmedArticleElements = getChildrensByName(rootEl, "PubmedArticle");
+		List<Element> proteinElements = getChildrensByName(rootEl, "DocSum");
 		
-		if (pubmedArticleElements.size() == 0) 
-			System.err.println("No articles found in document.");
+		if (proteinElements.size() == 0) {
+			System.err.println("No proteins found in document.");
+			return;
+		}
 		
-		for(Element pubmedArticle : pubmedArticleElements) 
-			_articles.add(parseSingleArticle(pubmedArticle));
+		for(Element protein : proteinElements) 
+			_proteins.add(parseSingleArticle(protein));
 	}
 	
-	private Article parseSingleArticle(Element pubmedArticleEl) {
+	private Protein parseSingleArticle(Element proteinEl) {
 		
-		Element medlineCitationEl = getChildByName(pubmedArticleEl, "MedlineCitation");
+		Protein protein = new Protein();
+		Element elem = getChildByName(proteinEl, "Id");
+		protein.setProtID(getTextContent(elem));
 		
-		Element idEl = getChildByName(medlineCitationEl, "PMID");
-		String  idStr = getTextContent(idEl);
-		
-		Element articleEl = getChildByName(medlineCitationEl, "Article");
-		Element journalEl = getChildByName(articleEl, "Journal");
-		Element journalIssueEl = getChildByName(journalEl, "JournalIssue");
-		Element journalVolumeEl = getChildByName(journalIssueEl, "Volume");
-		Element issueEl = getChildByName(journalIssueEl, "Issue");
-		
-		String volume = "?";
-		if (journalVolumeEl != null)
-			volume = getTextContent(journalVolumeEl);
-		
-		String issue = "?";
-		if (issueEl != null)
-			issue = getTextContent(issueEl);
-		
-		Element pubDateEl = getChildByName(journalIssueEl, "PubDate");
-		Element yearEl = getChildByName(pubDateEl, "Year");
-		String year = "";
-		if (yearEl != null)
-			year = getTextContent(yearEl);
-				
-		Element journalTitleEl = getChildByName(journalEl, "Title");
-		String journalTitle = getTextContent(journalTitleEl);
-			
-		Element authorsEl = getChildByName(articleEl, "AuthorList");
-		Element authorEl = getChildByName(authorsEl, "Author");
-		Element lastNameEl = getChildByName(authorEl, "LastName");
-		String lastName = getTextContent(lastNameEl);
-		Element foreNameEl = getChildByName(authorEl, "ForeName");
-		String foreName = getTextContent(foreNameEl);
-		String authors = lastName + " " + foreName;
-		
-		String DOI = "?";
-		Element DOI_El = getChildByName(articleEl, "ELocationID");
-		if (!(DOI_El==null))
-			DOI = getTextContent(DOI_El);
-		
-		Element articleTitleEl = getChildByName(articleEl, "ArticleTitle");
-		String title = getTextContent(articleTitleEl);
-		
-		Element abstractEl = getChildByName(articleEl, "Abstract");
-		StringBuilder absStr = new StringBuilder();
-
-		if (abstractEl != null) {
-			NodeList abstractChildren = abstractEl.getChildNodes();
-			for(int i=0; i<abstractChildren.getLength(); i++) {
-				Node child = abstractChildren.item(i);
-				if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals("AbstractText")) {
-					absStr.append( getTextContent( (Element)child));
-				}
+		List<Element> itemsList = getChildrensByName(proteinEl, "Item");
+		for(Element item : itemsList) {
+			switch (getAttrContent(item, "Name")) {
+				case "Caption":
+					protein.setCaption(getAttrContent(item, "Name"));
+					break;
+				case "Title":
+					protein.setTitle(getAttrContent(item, "Name"));
+					break;
+				case "Gi":
+					protein.setGi(Integer.parseInt(getAttrContent(item, "Name")));
+					break;
+				case "CreateDate":
+					protein.setCreateDate(getAttrContent(item, "Name"));
+					break;
+				case "UpdateDate":
+					protein.setUpdateDate(getAttrContent(item, "Name"));
+					break;
+				case "Flags":
+					protein.setFlags(Integer.parseInt(getAttrContent(item, "Name")));
+					break;
+				case "TaxID":
+					protein.setTaxID(Integer.parseInt(getAttrContent(item, "Name")));
+					break;
+				case "Length":
+					protein.setLength(Integer.parseInt(getAttrContent(item, "Name")));
+					break;
+				case "Status":
+					protein.setStatus(getAttrContent(item, "Name"));
+					break;
+				case "ReplacedBy":
+					protein.setReplacedBy(getAttrContent(item, "Name"));
+					break;
+				case "Comment":
+					protein.setComment(getAttrContent(item, "Name"));
+					break;
+				case "AccessionVersion":
+					protein.setAccessionVersion(getAttrContent(item, "Name"));
+					break;
 			}
 		}
-		if (absStr.length() == 0)
-			absStr = new StringBuilder("?");
-		
-		Article article = new Article();
-		article.setDOI(DOI);
-		article.setAuthor(authors);
-		article.setId(idStr);
-		article.setJournal(journalTitle);
-		article.setVolume(volume);
-		article.setIssue(issue);
-		article.setYear(year);
-		article.setTitle(title.replace("\t", " "));
 		
 		try {
 			String projectPath = System.getProperty("user.dir");
-			String filePath = projectPath + "/files/abstract/" + idStr + "_abstract.txt";
+			String filePath = projectPath + "/files/abstract/" + protein.getId() + "_abstract.txt";
 			
 			File file = new File(filePath);
 			file.getParentFile().mkdirs();
 			PrintWriter out = new PrintWriter(file);
 			
-			String prtAbstract =  absStr.toString().replace("\t", " ");
-			out.println(prtAbstract);
-			article.setAbstract(filePath);
+//			String prtAbstract =  absStr.toString().replace("\t", " ");
+//			out.println(prtAbstract);
+//			article.setAbstract(filePath);
 			
 			out.close();
 		} catch (FileNotFoundException e) {
@@ -131,7 +108,7 @@ public class ProteinParser extends XMLparser {
 		}
 		// article.setAbstract(absStr.toString().replace("\t", " "));
 		
-		return article;
+		return protein;
 
 	}
 }

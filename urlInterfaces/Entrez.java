@@ -63,12 +63,12 @@ public class Entrez {
 			throws IOException, ParserConfigurationException, SAXException {
 		
 		final String entrezFetchURL  = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
-		String queryStr = "";
+		String queryStr;
 		if (query.getDataBase().getType() == DBType.GENE || query.getDataBase().getType() == DBType.PROTEIN) {
-			queryStr += "esummary.fcgi?" + buildQuery(query);
+			queryStr = entrezFetchURL + "esummary.fcgi?" + buildQuery(query);
 		}
 		else {
-			queryStr += "efetch.fcgi?" + buildQuery(query);
+			queryStr = entrezFetchURL + "efetch.fcgi?" + buildQuery(query);
 		}
 		
 		//String queryStr = entrezFetchURL + buildQuery(query);

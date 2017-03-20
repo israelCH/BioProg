@@ -62,6 +62,7 @@ import persistentdatabase.model.Aneurysm;
 import persistentdatabase.model.Article;
 import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
+import persistentdatabase.model.Gene;
 import persistentdatabase.model.Model;
 import persistentdatabase.model.Persistable;
 
@@ -85,231 +86,37 @@ public class Client {
 	}
 	
 	// Scan aneurysms folder (that contains the aneurisk repository for data retrieval
-	private static String[] getAneurysmModelsIds(){
-		
-		File file = new File(modelsPath);
-		String[] directories = file.list(new FilenameFilter() {
-		  public boolean accept(File current, String name) {
-		    return new File(current, name).isDirectory();
-		  }
-		});
-		
-		return directories;
-	}
+//	private static String[] getAneurysmModelsIds(){
+//		
+//		File file = new File(modelsPath);
+//		String[] directories = file.list(new FilenameFilter() {
+//		  public boolean accept(File current, String name) {
+//		    return new File(current, name).isDirectory();
+//		  }
+//		});
+//		
+//		return directories;
+//	}
 	
-	private static void addToLog(String log) throws FileNotFoundException{
-		
-		String filePath = logPath + "/files/log.txt";
-		
-		File file = new File(filePath);
-		file.getParentFile().mkdirs();
-		PrintWriter out = new PrintWriter(file);
-		out.println(log + "/n");
-		out.close();
-		
-	}
+//	private static void addToLog(String log) throws FileNotFoundException{
+//		
+//		String filePath = logPath + "/files/log.txt";
+//		
+//		File file = new File(filePath);
+//		file.getParentFile().mkdirs();
+//		PrintWriter out = new PrintWriter(file);
+//		out.println(log + "/n");
+//		out.close();
+//		
+//	}
 	
-	public String testQuary ()throws Exception
-	{
-		String result =""; 
-				
-		PersistAgent persistAgent = new PersistAgent();
-		Query query = new Query();
-		query.setDatabase(DBType.PUBMED);
-		query.addId("23371018");
-		query.addId("10227670");
-		query.setSearchType(SearchType.FETCH);
-		
-		// Calling Entrez
-		Document xmlDocs = Entrez.callEntrez(query) ;
-		
-		// Parse answer into a list of articles
-		PubmedParser parser = new PubmedParser(xmlDocs);
-		parser.parse();
-		List<Article> articles = parser.getArticles();
-		
-		for (Article article: articles){
-			persistAgent.PersistObject(article);
-		}
-		
-		// print persisted articles
-		persistAgent.showObjects(Article.ENTITY_NAME);
-		
-		// get persisted articles back and print their abstracts from files
-		List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
-		for (int i = 0; i < articlesPer.size(); i++){
-			Article article = (Article) articlesPer.get(i);
-			result += article.getAbstract() + "---------------------------------------" +"\r\n"  ;
-		}
-		return result;
-	}
-	
-	public String testQuary2 (String str)throws Exception
-	{
-		String result =""; 
-		String[] terms = str.split("\\s+");
-		Query query6 = new Query();
-		query6.setDatabase(DBType.PUBMED);
-		for (int i = 0; i<terms.length; i++)
-			query6.addTerm(terms[i]);
-		query6.setSearchType(SearchType.SEARCH);
-		List<String> results = Entrez.searchEntrez(query6);
-				
-		PersistAgent persistAgent = new PersistAgent();
-		Query query = new Query();
-		query.setDatabase(DBType.PUBMED);
-		for (String id: results)
-			query.addId(id);
-
-		query.setSearchType(SearchType.FETCH);
-		
-		// Calling Entrez
-		Document xmlDocs = Entrez.callEntrez(query) ;
-		
-		// Parse answer into a list of articles
-		PubmedParser parser = new PubmedParser(xmlDocs);
-		parser.parse();
-		List<Article> articles = parser.getArticles();
-		
-		for (Article article: articles){
-			persistAgent.PersistObject(article);
-		}
-		
-		// print persisted articles
-		persistAgent.showObjects(Article.ENTITY_NAME);
-		
-		// get persisted articles back and print their abstracts from files
-		List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
-		for (int i = 0; i < articlesPer.size(); i++){
-			Article article = (Article) articlesPer.get(i);
-			result += article.getAbstract() + "---------------------------------------" +"\r\n"  ;
-		}
-		return result;
-	}
-	
-	public String testQuary3 (String str)throws Exception
-	{
-		String result =""; 
-		String[] terms = str.split("\\s+");
-		Query query6 = new Query();
-		query6.setDatabase(DBType.PUBMED);
-		for (int i = 0; i<terms.length; i++)
-			query6.addTerm(terms[i]);
-		query6.setSearchType(SearchType.SEARCH);
-		List<String> results = Entrez.searchEntrez(query6);
-				
-		PersistAgent persistAgent = new PersistAgent();
-		Query query = new Query();
-		query.setDatabase(DBType.PUBMED);
-		for (String id: results)
-			query.addId(id);
-
-		query.setSearchType(SearchType.FETCH);
-		
-		// Calling Entrez
-		Document xmlDocs = Entrez.callEntrez(query) ;
-		
-		// Parse answer into a list of articles
-		PubmedParser parser = new PubmedParser(xmlDocs);
-		parser.parse();
-		List<Article> articles = parser.getArticles();
-		
-		for (Article article: articles){
-			//persistAgent.PersistObject(article);
-			result += article.toString() + "---------------------------------------" +"\r\n"  ;
-		}
-		
-		// print persisted articles
-		//persistAgent.showObjects(Article.ENTITY_NAME);
-		
-		// get persisted articles back and print their abstracts from files
-		//List<Persistable> articlesPer = persistAgent.getObjectsList(Article.ENTITY_NAME);
-		//for (Persistable article : articlesPer) {
-			//result += article.toString() + "---------------------------------------" +"\r\n"  ;
-		//}
-		
-	   
-		return result;
-	}
-	
-	public List<Article> testQuary4 (String str)throws Exception
-	{
-		
-		//String result =""; 
-		String[] terms = str.split("\\s+");
-		Query query6 = new Query();
-		query6.setDatabase(DBType.PUBMED);
-		for (int i = 0; i<terms.length; i++)
-			query6.addTerm(terms[i]);
-		query6.setSearchType(SearchType.SEARCH);
-		List<String> results = Entrez.searchEntrez(query6);
-				
-		//PersistAgent persistAgent = new PersistAgent();
-		Query query = new Query();
-		query.setDatabase(DBType.PUBMED);
-		for (String id: results)
-			query.addId(id);
-
-		query.setSearchType(SearchType.FETCH);
-		
-		// Calling Entrez
-		Document xmlDocs = Entrez.callEntrez(query) ;
-		
-		// Parse answer into a list of articles
-		PubmedParser parser = new PubmedParser(xmlDocs);
-		parser.parse();
-		List<Article> articles = parser.getArticles();
-		
-		//for (Article article: articles){
-		//	 Button btn = new Button(comp, SWT.NONE);
-		//	 btn.setText(article.getId());
-			
-			
-			
-		//}
-		
-		
-		
-	   
-		return articles;
-	}
-	
-	public List<Book> testQuary5 (String str)throws Exception
-	{		
-		String result =""; 
-		String[] terms = str.split("\\s+");
-		Query query6 = new Query();
-		query6.setDatabase(DBType.NLM_catalog);
-		query6.setSearchType(SearchType.SEARCH);
-		for (int i = 0; i<terms.length; i++)
-			query6.addTerm(terms[i]);		
-		List<String> results = Entrez.searchEntrez(query6);
-				
-		PersistAgent persistAgent = new PersistAgent();
-		Query query = new Query();
-		query.setDatabase(DBType.NLM_catalog);
-		query.setSearchType(SearchType.FETCH);
-		for (String id: results)
-			query.addId(id);
-		
-		// Calling Entrez
-		Document xmlDocs = Entrez.callEntrez(query);
-		
-		// Parse answer into a list of books
-		NLMparser parser = new NLMparser(xmlDocs);
-		parser.parse();
-		List<Book> books = parser.getBooks();
-		
-		return books;
-	}
-	
-	public List<Book> onlineSearch (String str)throws Exception // פונה לשרת
+	public List<Gene> onlineSearch (String str)throws Exception // פונה לשרת
 	{
 		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
 		output.writeObject("01"); // שולחים קוד שאומר חיפוש
 		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
 		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
-		List<Book> answer = (List<Book>) input.readObject();
+		List<Gene> answer = (List<Gene>) input.readObject();
 		return answer;
 		
 		//Book[] list = answer.split(";");

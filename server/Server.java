@@ -12,10 +12,12 @@ import org.w3c.dom.Document;
 import database.Query;
 import database.DataBase.DBType;
 import database.Query.SearchType;
+import parsers.GeneParser;
 import parsers.NLMparser;
 import persistentdatabase.main.PersistAgent;
 import persistentdatabase.main.PersistAgentFactory;
 import persistentdatabase.model.Book;
+import persistentdatabase.model.Gene;
 import urlInterfaces.Entrez;
 
 //import org.apache.commons.lang.SerializationUtils;
@@ -57,7 +59,7 @@ public class Server {
 
                 while (true) {
                     String input;
-                    List<Book> res;
+                    List<Gene> res;
 					try {
 						input = (String) in.readObject(); // קריאה ראשונה של קוד פעולה
 	                    if (input != null && !input.equals("")) {
@@ -91,12 +93,12 @@ public class Server {
         }
     }
     
-    private static List<Book> searchFunction(String str) {
+    private static List<Gene> searchFunction(String str) {
     	try {
     	//String result =""; 
 		String[] terms = str.split("\\s+");
 		Query query = new Query();
-		query.setDatabase(DBType.PUBMED);
+		query.setDatabase(DBType.GENE);
 		query.setSearchType(SearchType.SEARCH);
 		for (int i = 0; i<terms.length; i++)
 			query.addTerm(terms[i]);		
@@ -104,7 +106,7 @@ public class Server {
 				
 		//PersistAgent persistAgent = new PersistAgent();
 		query = new Query();
-		query.setDatabase(DBType.PUBMED);
+		query.setDatabase(DBType.GENE);
 		query.setSearchType(SearchType.FETCH);
 		for (String id: results)
 			query.addId(id);
@@ -113,10 +115,10 @@ public class Server {
 		Document xmlDocs = Entrez.callEntrez(query);
 		
 		// Parse answer into a list of books
-		NLMparser parser = new NLMparser(xmlDocs);
+		GeneParser parser = new GeneParser(xmlDocs);
 		parser.parse();
-		List<Book> books = parser.getBooks();
-		return books;
+		List<Gene> genes = parser.getGenes();
+		return genes;
 		
 		// מפה זה אם רוצים להחזיר סטרינג אחד ארוך - אבל שינינו שיחזיר מערך אוביקטים
 //		String backString = "";
