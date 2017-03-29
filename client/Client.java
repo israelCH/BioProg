@@ -66,6 +66,7 @@ import persistentdatabase.model.Gene;
 import persistentdatabase.model.Model;
 import persistentdatabase.model.Persistable;
 import persistentdatabase.model.Protein;
+import persistentdatabase.model.Structure;
 
 import org.apache.commons.lang.SerializationUtils;
 
@@ -111,13 +112,13 @@ public class Client {
 //		
 //	}
 	
-	public List<Protein> onlineSearch (String str)throws Exception // פונה לשרת
+	public List<Structure> onlineSearch (String str)throws Exception // פונה לשרת
 	{
 		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
 		output.writeObject("01"); // שולחים קוד שאומר חיפוש
 		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
 		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
-		List<Protein> answer = (List<Protein>) input.readObject();
+		List<Structure> answer = (List<Structure>) input.readObject();
 		return answer;
 		
 		//Book[] list = answer.split(";");

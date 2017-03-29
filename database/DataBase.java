@@ -14,7 +14,7 @@ public class DataBase {
 	public enum DBType {
 		PUBMED, PUBMED_CENTRAL, 
 		MALA_CARDS, BIO_MODELS, MeSH, NLM_catalog,
-		OMIM, GENE, PROTEIN;
+		STRUCTURE, GENE, PROTEIN;
 	}
 	
 	private DBType _dbType;
@@ -28,7 +28,7 @@ public class DataBase {
 		else if (_dbType.equals(DBType.PUBMED_CENTRAL)) {return "pmc";   }
 		else if (_dbType.equals(DBType.MeSH)) 			{return "mesh";   }
 		else if (_dbType.equals(DBType.NLM_catalog)) 	{return "nlmcatalog";   }
-		else if (_dbType.equals(DBType.OMIM)) 			{return "omim";   }
+		else if (_dbType.equals(DBType.STRUCTURE)) 		{return "structure";   }
 		else if (_dbType.equals(DBType.PROTEIN)) 		{return "protein";   }
 		else if (_dbType.equals(DBType.GENE)) 			{return "gene";   }
 		else if (_dbType.equals(DBType.MALA_CARDS))     {return "http://malacards.org/search/results/"; }

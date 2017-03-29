@@ -64,7 +64,7 @@ public class Entrez {
 		
 		final String entrezFetchURL  = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/";
 		String queryStr;
-		if (query.getDataBase().getType() == DBType.GENE || query.getDataBase().getType() == DBType.PROTEIN) {
+		if (query.getDataBase().getType() == DBType.GENE || query.getDataBase().getType() == DBType.PROTEIN || query.getDataBase().getType() == DBType.STRUCTURE) {
 			queryStr = entrezFetchURL + "esummary.fcgi?" + buildQuery(query);
 		}
 		else {
@@ -88,7 +88,7 @@ public class Entrez {
 		if ((query.getDataBase().getType().equals(DBType.PUBMED)) ||
 		    (query.getDataBase().getType().equals(DBType.PUBMED_CENTRAL)) ||
 		    (query.getDataBase().getType().equals(DBType.NLM_catalog)) ||
-		    (query.getDataBase().getType().equals(DBType.OMIM)) ||
+		    (query.getDataBase().getType().equals(DBType.STRUCTURE)) ||
 		    (query.getDataBase().getType().equals(DBType.GENE)) ||
 		    (query.getDataBase().getType().equals(DBType.PROTEIN)) ||
 		    (query.getDataBase().getType().equals(DBType.MeSH)) ) {

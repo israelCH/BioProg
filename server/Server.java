@@ -15,11 +15,13 @@ import database.Query.SearchType;
 import parsers.GeneParser;
 import parsers.NLMparser;
 import parsers.ProteinParser;
+import parsers.StructureParser;
 import persistentdatabase.main.PersistAgent;
 import persistentdatabase.main.PersistAgentFactory;
 import persistentdatabase.model.Book;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
+import persistentdatabase.model.Structure;
 import urlInterfaces.Entrez;
 
 //import org.apache.commons.lang.SerializationUtils;
@@ -32,7 +34,7 @@ public class Server {
 	//private EntityManager entityManager = EntityManagerUtil.getEntityManager();
 	
     public static void main(String[] args) throws Exception {
-        System.out.println("The capitalization server is running.");
+        System.out.println("The BioProg server is running.");
         int clientNumber = 0;
         ServerSocket listener = new ServerSocket(9898);
         try {
@@ -61,7 +63,7 @@ public class Server {
 
                 while (true) {
                     String input;
-                    List<Protein> res;
+                    List<Structure> res;
 					try {
 						input = (String) in.readObject(); // קריאה ראשונה של קוד פעולה
 	                    if (input != null && !input.equals("")) {
@@ -95,12 +97,12 @@ public class Server {
         }
     }
     
-    private static List<Protein> searchFunction(String str) {
+    private static List<Structure> searchFunction(String str) {
     	try {
     	//String result =""; 
 		String[] terms = str.split("\\s+");
 		Query query = new Query();
-		query.setDatabase(DBType.PROTEIN);
+		query.setDatabase(DBType.STRUCTURE);
 		query.setSearchType(SearchType.SEARCH);
 		for (int i = 0; i<terms.length; i++)
 			query.addTerm(terms[i]);		
@@ -108,7 +110,7 @@ public class Server {
 				
 		//PersistAgent persistAgent = new PersistAgent();
 		query = new Query();
-		query.setDatabase(DBType.PROTEIN);
+		query.setDatabase(DBType.STRUCTURE);
 		query.setSearchType(SearchType.FETCH);
 		for (String id: results)
 			query.addId(id);
@@ -117,16 +119,10 @@ public class Server {
 		Document xmlDocs = Entrez.callEntrez(query);
 		
 		// Parse answer into a list of books
-		ProteinParser parser = new ProteinParser(xmlDocs);
+		StructureParser parser = new StructureParser(xmlDocs);
 		parser.parse();
-		List<Protein> proteins = parser.getProteins();
-		return proteins;
-		
-		// מפה זה אם רוצים להחזיר סטרינג אחד ארוך - אבל שינינו שיחזיר מערך אוביקטים
-//		String backString = "";
-//		for (Book book: books)
-//			backString += book.getTitle() + ";";		
-//    	return backString.substring(0,backString.length() - 1);	
+		List<Structure> structures = parser.getPdbs();
+		return structures;
     	
 		} catch (Exception e1) {
 			return null;
