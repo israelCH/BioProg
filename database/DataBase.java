@@ -31,9 +31,18 @@ public class DataBase {
 		else if (_dbType.equals(DBType.STRUCTURE)) 		{return "structure";   }
 		else if (_dbType.equals(DBType.PROTEIN)) 		{return "protein";   }
 		else if (_dbType.equals(DBType.GENE)) 			{return "gene";   }
-		else if (_dbType.equals(DBType.MALA_CARDS))     {return "http://malacards.org/search/results/"; }
-		else if (_dbType.equals(DBType.BIO_MODELS))		{return "https://www.ebi.ac.uk/biomodels-main/";		}
+		else if (_dbType.equals(DBType.MALA_CARDS))     {return "http://malacards.org/search/results/";}
+		else if (_dbType.equals(DBType.BIO_MODELS))		{return "https://www.ebi.ac.uk/biomodels-main/";}
 		else return null;
+	}
+	
+	public String getValue(){
+		if      (_dbType.equals(DBType.STRUCTURE))      {return "01";}
+		else if (_dbType.equals(DBType.PUBMED)) 		{return "02";}
+		else if (_dbType.equals(DBType.PROTEIN)) 		{return "03";}
+		else if (_dbType.equals(DBType.GENE)) 			{return "04";}
+		else if (_dbType.equals(DBType.MALA_CARDS))     {return "05";}
+		else return "00";
 	}
 	
 	public DBType getType(){

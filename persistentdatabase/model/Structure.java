@@ -44,13 +44,11 @@ public class Structure implements Persistable, Serializable {
 
 	@Override
 	public String getId() {
-		// TODO Auto-generated method stub
 		return _id;
 	}
 
 	@Override
 	public String getEntityName() {
-		// TODO Auto-generated method stub
 		return ENTITY_NAME;
 	}
 	

@@ -45,6 +45,7 @@ import org.w3c.dom.Document;
 
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
+import database.DataBase;
 import database.DataBase.DBType;
 import database.Fields.SearchFields;
 import database.Query;
@@ -112,19 +113,50 @@ public class Client {
 //		
 //	}
 	
-	public List<Structure> onlineSearch (String str)throws Exception // פונה לשרת
+	public <T> List<T> onlineSearch (String str, DBType type)throws Exception // פונה לשרת
 	{
 		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
-		output.writeObject("01"); // שולחים קוד שאומר חיפוש
+		output.writeObject((new DataBase(type)).getValue()); // שולחים קוד שאומר חיפוש
+
 		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
-		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
-		List<Structure> answer = (List<Structure>) input.readObject();
-		return answer;
+		// השרת מחכה לנו - מעבד ומחזיר את הנתונים
+		switch (type) {
+		case STRUCTURE:
+			List<Structure> ansStru = (List<Structure>) input.readObject();
+			return (List<T>) ansStru;
+		case PUBMED:
+			List<Article> ansPub = (List<Article>) input.readObject();
+			return (List<T>) ansPub;
+		case PROTEIN:
+			List<Protein> ansPro = (List<Protein>) input.readObject();
+			return (List<T>) ansPro;
+		case GENE:
+			List<Gene> ansGene = (List<Gene>) input.readObject();
+			return (List<T>) ansGene;
+		case MALA_CARDS:
+			
+			break;
+
+		default:
+			break;
+		}
 		
-		//Book[] list = answer.split(";");
-		//List<Book> results= Arrays.asList(list);	
-		//return results;
+		return null;
 	}
+	
+//	public List<Structure> onlineSearch (String str, DBType type)throws Exception // פונה לשרת
+//	{
+//		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
+//		output.writeObject("01"); // שולחים קוד שאומר חיפוש
+//		output.writeObject(str); // שולחים בפועל את הטקסט לחיפוש
+//		// השרת מחכה לנו - מעבד ומחזיר את הנתונים		
+//		List<Structure> answer = (List<Structure>) input.readObject();
+//		return answer;
+//		
+//		//Book[] list = answer.split(";");
+//		//List<Book> results= Arrays.asList(list);	
+//		//return results;
+//	}
 	
 	public Boolean onlineSaveLocal (List<Book> data)throws Exception // פונה לשרת
 	{
