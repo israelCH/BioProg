@@ -7,6 +7,7 @@
 package persistentdatabase.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -18,9 +19,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Article implements Persistable{
+public class Article implements Persistable, Serializable{
 	
-  @Id
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+@Id
   @GeneratedValue(strategy = GenerationType.TABLE)
   private String id;
   

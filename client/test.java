@@ -204,9 +204,9 @@ public class test {
 		geneResultsList.setSize(GeneTabComposite.getBounds().width / 6,
 				GeneTabComposite.getBounds().height - 20);
 		
-		pubmedFullData = new Text(GeneTabComposite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		pubmedFullData.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		pubmedFullData.setBounds(
+		geneFullData = new Text(GeneTabComposite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		geneFullData.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
+		geneFullData.setBounds(
 				geneResultsList.getBounds().x + geneResultsList.getBounds().width + 15,
 				geneResultsList.getBounds().y,
 				(int)(GeneTabComposite.getBounds().width / 6 * 4.8),
@@ -234,8 +234,8 @@ public class test {
 					geneItemsList.removeAll();
 					geneFullData.setText(" ");
 					
-					searchStructure();
-					//searchPubmed();
+					//searchStructure();
+					searchPubmed();
 					//searchProtein();
 					//searchGene();						
 				} catch (Exception e1) {
@@ -243,7 +243,8 @@ public class test {
 					//result.setText("server error:" + e1.toString());
 					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
 					msb.setText("Warning");
-					msb.setMessage("an Error occured while searching");
+					msb.setMessage("an Error occured while searching \n" + e1.toString());
+					msb.open();
 					//e1.printStackTrace();
 				}
 
