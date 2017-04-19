@@ -2,8 +2,8 @@ package client;
 
 import java.util.List;
 
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
+//import javax.swing.JOptionPane;
+//import javax.swing.JTextArea;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -13,9 +13,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
+//import org.eclipse.swt.events.ControlAdapter;
+//import org.eclipse.swt.events.ControlEvent;
+//import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -29,13 +29,13 @@ import database.DataBase.DBType;
 //import com.sun.java.util.jar.pack.Attribute.Layout;
 
 import persistentdatabase.model.Article;
-import persistentdatabase.model.Book;
+//import persistentdatabase.model.Book;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
 import persistentdatabase.model.Structure;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Link;
+//import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 
 public class test {
@@ -119,11 +119,14 @@ public class test {
 		
 		Composite StructureTabComposite = new Composite(tFol,SWT.BORDER); // בניית תוכן הטאב
 		StructureTabComposite.setLayout(new FillLayout());
+		GridLayout gl = new GridLayout();
+		gl.numColumns = 1;
 
 		structureResultsList = new ScrolledComposite(StructureTabComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		structureResultsList.setLocation(10, 10);
-		structureResultsList.setSize(StructureTabComposite.getBounds().width / 6,
-				StructureTabComposite.getBounds().height - 20);
+//		structureResultsList.setSize(StructureTabComposite.getBounds().width / 6,
+//				StructureTabComposite.getBounds().height - 20);
+		structureResultsList.setSize(150,250);
 		
 		structureBrowser = new Browser(StructureTabComposite,SWT.NONE);
 		structureBrowser.setBounds(
@@ -161,6 +164,8 @@ public class test {
 		
 		org.eclipse.swt.widgets.List pubmedItemsList = new org.eclipse.swt.widgets.List(pubmedResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		
+		pubmedTab.setControl(PubmedTabComposite);
+
 		//---------------------------------------------------------------
 		
 		proteinTab = new TabItem(tFol,SWT.BORDER); // יצירת טאב שלישי
@@ -183,6 +188,8 @@ public class test {
 				proteinResultsList.getBounds().height  );
 		
 		org.eclipse.swt.widgets.List proteinItemsList = new org.eclipse.swt.widgets.List(proteinResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+		
+		proteinTab.setControl(ProteinTabComposite);
 		
 		//---------------------------------------------------------------
 		
@@ -207,6 +214,8 @@ public class test {
 		
 		org.eclipse.swt.widgets.List geneItemsList = new org.eclipse.swt.widgets.List(geneResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
 		
+		geneTab.setControl(GeneTabComposite);
+		
 		//---------------------------------------------------------------
 		Button searchBtn = new Button(shell, SWT.NONE);
 		searchBtn.addSelectionListener(new SelectionAdapter() {
@@ -226,9 +235,9 @@ public class test {
 					geneFullData.setText(" ");
 					
 					searchStructure();
-					searchPubmed();
-					searchProtein();
-					searchGene();						
+					//searchPubmed();
+					//searchProtein();
+					//searchGene();						
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					//result.setText("server error:" + e1.toString());
