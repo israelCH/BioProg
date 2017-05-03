@@ -1,6 +1,6 @@
 package client;
 
-import java.util.List;
+//import java.util.List;
 
 //import javax.swing.JOptionPane;
 //import javax.swing.JTextArea;
@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -29,7 +30,6 @@ import database.DataBase.DBType;
 //import com.sun.java.util.jar.pack.Attribute.Layout;
 
 import persistentdatabase.model.Article;
-//import persistentdatabase.model.Book;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
 import persistentdatabase.model.Structure;
@@ -43,21 +43,18 @@ public class test {
 	protected Shell shell;
 	private Text text;
 	
-	private TabItem pubmedTab;
-	private ScrolledComposite pubmedResultsList;
-	private Text pubmedFullData;
+	private List pubmedList;
+	private Text pubmedFulldata;
 	
-	private TabItem proteinTab;
-	private ScrolledComposite proteinResultsList;
-	private Text proteinFullData;
+	private List proteinList;
+	private Text proteinFulldata;
 	
-	private TabItem geneTab;
-	private ScrolledComposite geneResultsList;
-	private Text geneFullData;
+	private List geneList;
+	private Text geneFulldata;
 	
-	private TabItem structureTab;
-	private ScrolledComposite structureResultsList;
+	private List structureList;
 	private Browser structureBrowser;
+	
 	
 	Client client = null;
 
@@ -103,119 +100,7 @@ public class test {
 		text = new Text(shell, SWT.BORDER); // תיבת החיפוש
 		text.setBounds(10, 24, 329, 32);
 		text.setFocus();
-		text.setText("blood"); // ?????????????????????????
-		
-		// בנית הטאבים
-		TabFolder tFol = new TabFolder(shell, SWT.BORDER);
-		tFol.setBounds(text.getBounds().x,
-				text.getBounds().y + text.getBounds().height + 15,
-				(int)(shell.getBounds().width * 0.95),
-				(int)(shell.getBounds().height * 0.8));
-		
-		//---------------------------------------------------------------
-		
-		structureTab = new TabItem(tFol,SWT.BORDER); // יצירת טאב ראשון
-		structureTab.setText("Structure");		
-		
-		Composite StructureTabComposite = new Composite(tFol,SWT.BORDER); // בניית תוכן הטאב
-		StructureTabComposite.setLayout(new FillLayout());
-		GridLayout gl = new GridLayout();
-		gl.numColumns = 1;
-
-		structureResultsList = new ScrolledComposite(StructureTabComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		structureResultsList.setLocation(10, 10);
-//		structureResultsList.setSize(StructureTabComposite.getBounds().width / 6,
-//				StructureTabComposite.getBounds().height - 20);
-		structureResultsList.setSize(150,250);
-		
-		structureBrowser = new Browser(StructureTabComposite,SWT.NONE);
-		structureBrowser.setBounds(
-				structureResultsList.getBounds().x + structureResultsList.getBounds().width + 15,
-				structureResultsList.getBounds().y,
-				(int)(StructureTabComposite.getBounds().width / 6 * 4.8),
-				structureResultsList.getBounds().height  );
-		//structureBrowser.setUrl("http://blank.org/");
-		//browser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=2POR");
-		
-		org.eclipse.swt.widgets.List structureItemsList = new org.eclipse.swt.widgets.List(structureResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		
-		structureTab.setControl(StructureTabComposite);
-		
-		//---------------------------------------------------------------
-		
-		pubmedTab = new TabItem(tFol,SWT.BORDER); // יצירת טאב שני
-		pubmedTab.setText("Pubmed");	
-		
-		Composite PubmedTabComposite = new Composite(tFol,SWT.BORDER); // בניית תוכן הטאב
-		PubmedTabComposite.setLayout(new FillLayout());
-		
-		pubmedResultsList = new ScrolledComposite(PubmedTabComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		pubmedResultsList.setLocation(10, 10);
-		pubmedResultsList.setSize(PubmedTabComposite.getBounds().width / 6,
-				PubmedTabComposite.getBounds().height - 20);
-		
-		pubmedFullData = new Text(PubmedTabComposite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		pubmedFullData.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		pubmedFullData.setBounds(
-				pubmedResultsList.getBounds().x + pubmedResultsList.getBounds().width + 15,
-				pubmedResultsList.getBounds().y,
-				(int)(PubmedTabComposite.getBounds().width / 6 * 4.8),
-				pubmedResultsList.getBounds().height  );
-		
-		org.eclipse.swt.widgets.List pubmedItemsList = new org.eclipse.swt.widgets.List(pubmedResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		
-		pubmedTab.setControl(PubmedTabComposite);
-
-		//---------------------------------------------------------------
-		
-		proteinTab = new TabItem(tFol,SWT.BORDER); // יצירת טאב שלישי
-		proteinTab.setText("Protein");	
-		
-		Composite ProteinTabComposite = new Composite(tFol,SWT.BORDER); // בניית תוכן הטאב
-		ProteinTabComposite.setLayout(new FillLayout());
-		
-		proteinResultsList = new ScrolledComposite(ProteinTabComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		proteinResultsList.setLocation(10, 10);
-		proteinResultsList.setSize(ProteinTabComposite.getBounds().width / 6,
-				ProteinTabComposite.getBounds().height - 20);
-		
-		proteinFullData = new Text(ProteinTabComposite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		proteinFullData.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		proteinFullData.setBounds(
-				proteinResultsList.getBounds().x + proteinResultsList.getBounds().width + 15,
-				proteinResultsList.getBounds().y,
-				(int)(ProteinTabComposite.getBounds().width / 6 * 4.8),
-				proteinResultsList.getBounds().height  );
-		
-		org.eclipse.swt.widgets.List proteinItemsList = new org.eclipse.swt.widgets.List(proteinResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		
-		proteinTab.setControl(ProteinTabComposite);
-		
-		//---------------------------------------------------------------
-		
-		geneTab = new TabItem(tFol,SWT.BORDER); // יצירת טאב רביעי
-		geneTab.setText("Gene");	
-		
-		Composite GeneTabComposite = new Composite(tFol,SWT.BORDER); // בניית תוכן הטאב
-		GeneTabComposite.setLayout(new FillLayout());
-		
-		geneResultsList = new ScrolledComposite(GeneTabComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		geneResultsList.setLocation(10, 10);
-		geneResultsList.setSize(GeneTabComposite.getBounds().width / 6,
-				GeneTabComposite.getBounds().height - 20);
-		
-		geneFullData = new Text(GeneTabComposite, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		geneFullData.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-		geneFullData.setBounds(
-				geneResultsList.getBounds().x + geneResultsList.getBounds().width + 15,
-				geneResultsList.getBounds().y,
-				(int)(GeneTabComposite.getBounds().width / 6 * 4.8),
-				geneResultsList.getBounds().height  );
-		
-		org.eclipse.swt.widgets.List geneItemsList = new org.eclipse.swt.widgets.List(geneResultsList, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-		
-		geneTab.setControl(GeneTabComposite);
-		
+		text.setText("blood");
 		//---------------------------------------------------------------
 		Button searchBtn = new Button(shell, SWT.NONE);
 		searchBtn.addSelectionListener(new SelectionAdapter() {
@@ -225,25 +110,25 @@ public class test {
 				try {
 					client.InitialConnection();
 					// נאפס את התוצאות הקודמות לפני החיפוש
-					structureItemsList.removeAll();
+					structureList.removeAll();
 					structureBrowser.setUrl("http://blank.org/");
-					pubmedItemsList.removeAll();
-					pubmedFullData.setText(" ");
-					proteinItemsList.removeAll();
-					proteinFullData.setText(" ");
-					geneItemsList.removeAll();
-					geneFullData.setText(" ");
-					
-					//searchStructure();
+					pubmedList.removeAll();
+					pubmedFulldata.setText(" ");
+					proteinList.removeAll();
+					proteinFulldata.setText(" ");
+					geneList.removeAll();
+					geneFulldata.setText(" ");
+										
 					searchPubmed();
-					//searchProtein();
-					//searchGene();						
+					searchProtein();
+					searchGene();			
+					searchStructure();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					//result.setText("server error:" + e1.toString());
 					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
 					msb.setText("Warning");
-					msb.setMessage("an Error occured while searching \n" + e1.toString());
+					msb.setMessage("David/Israel, \n an Error occured while searching: \n" + e1.toString());
 					msb.open();
 					//e1.printStackTrace();
 				}
@@ -251,89 +136,151 @@ public class test {
 			}
 			
 			private void searchStructure() throws Exception {
-				List<Structure> stru = client.onlineSearch(text.getText(),DBType.STRUCTURE);				
+				java.util.List<Structure> stru = client.onlineSearch(text.getText(),DBType.STRUCTURE);				
 				for (Structure str: stru)
-					structureItemsList.add(str.getName());
+					structureList.add(str.getName());
 					
-				structureItemsList.addSelectionListener(new SelectionListener() {
+				structureList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
-					int[] selectedItems = structureItemsList.getSelectionIndices();
+					int[] selectedItems = structureList.getSelectionIndices();
 					Structure str = stru.get(selectedItems[0]);
 					structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
 				}
 				    public void widgetDefaultSelected(SelectionEvent event) {
-				    	int[] selectedItems = structureItemsList.getSelectionIndices();
+				    	int[] selectedItems = structureList.getSelectionIndices();
 						Structure str = stru.get(selectedItems[0]);
 						structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
 					    }
 				});
-				structureResultsList.setContent(structureItemsList);
 			}
 			
 			private void searchPubmed() throws Exception {
-				List<Article> arts = client.onlineSearch(text.getText(),DBType.PUBMED);				
+				java.util.List<Article> arts = client.onlineSearch(text.getText(),DBType.PUBMED);
 				for (Article art: arts)
-					pubmedItemsList.add(art.getTitle());
+					pubmedList.add(art.getTitle());
 					
-				pubmedItemsList.addSelectionListener(new SelectionListener() {
+				pubmedList.addSelectionListener(new SelectionListener() {
+				@Override
 				public void widgetSelected(SelectionEvent event) {
-					int[] selectedItems = pubmedItemsList.getSelectionIndices();
+					int[] selectedItems = pubmedList.getSelectionIndices();
 					Article art = arts.get(selectedItems[0]);
-					pubmedFullData.setText(art.toString());
+					pubmedFulldata.setText(art.toString());
 				}
-				    public void widgetDefaultSelected(SelectionEvent event) {
-						int[] selectedItems = pubmedItemsList.getSelectionIndices();
+				    @Override
+					public void widgetDefaultSelected(SelectionEvent event) {
+						int[] selectedItems = pubmedList.getSelectionIndices();
 						Article art = arts.get(selectedItems[0]);
-						pubmedFullData.setText(art.toString());
+						pubmedFulldata.setText(art.toString());
 					    }
 				});
-				pubmedResultsList.setContent(pubmedItemsList);
 			}
 			
 			private void searchProtein() throws Exception {
-				List<Protein> prots = client.onlineSearch(text.getText(),DBType.PROTEIN);				
+				java.util.List<Protein> prots = client.onlineSearch(text.getText(),DBType.PROTEIN);				
 				for (Protein pro: prots)
-					proteinItemsList.add(pro.getTitle());
+					proteinList.add(pro.getTitle());
 					
-				proteinItemsList.addSelectionListener(new SelectionListener() {
+				proteinList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
-					int[] selectedItems = proteinItemsList.getSelectionIndices();
+					int[] selectedItems = proteinList.getSelectionIndices();
 					Protein pro = prots.get(selectedItems[0]);
-					proteinFullData.setText(pro.toString());
+					proteinFulldata.setText(pro.toString());
 				}
 				    public void widgetDefaultSelected(SelectionEvent event) {
-						int[] selectedItems = proteinItemsList.getSelectionIndices();
+						int[] selectedItems = proteinList.getSelectionIndices();
 						Protein pro = prots.get(selectedItems[0]);
-						proteinFullData.setText(pro.toString());
+						proteinFulldata.setText(pro.toString());
 					    }
 				});
-				proteinResultsList.setContent(proteinItemsList);
 			}
 			
 			private void searchGene() throws Exception {
-				List<Gene> genes = client.onlineSearch(text.getText(),DBType.GENE);				
+				java.util.List<Gene> genes = client.onlineSearch(text.getText(),DBType.GENE);				
 				for (Gene gen: genes)
-					geneItemsList.add(gen.getName());
+					geneList.add(gen.getName());
 					
-				geneItemsList.addSelectionListener(new SelectionListener() {
+				geneList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
-					int[] selectedItems = geneItemsList.getSelectionIndices();
+					int[] selectedItems = geneList.getSelectionIndices();
 					Gene gen = genes.get(selectedItems[0]);
-					geneFullData.setText(gen.toString());
+					geneFulldata.setText(gen.toString());
 				}
 				    public void widgetDefaultSelected(SelectionEvent event) {
-						int[] selectedItems = geneItemsList.getSelectionIndices();
+						int[] selectedItems = geneList.getSelectionIndices();
 						Gene gen = genes.get(selectedItems[0]);
-						geneFullData.setText(gen.toString());
+						geneFulldata.setText(gen.toString());
 					    }
 				});
-				geneResultsList.setContent(proteinItemsList);
 			}
 		});
 		searchBtn.setBounds(467, 24, 116, 32);
 		searchBtn.setText("Searce");
 		
 		shell.setDefaultButton(searchBtn);		
+		
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
+		tabFolder.setBounds(10, 62, 1330, 612);
+		
+		//-------------------------------------------------------------
+		
+		TabItem pubmedTabItem = new TabItem(tabFolder, SWT.NONE);
+		pubmedTabItem.setText("pubmed");
+		
+		Composite pubmedComposite = new Composite(tabFolder, SWT.NONE);
+		pubmedTabItem.setControl(pubmedComposite);
+		
+		pubmedList = new List(pubmedComposite, SWT.BORDER);
+		pubmedList.setBounds(10, 10, 250, 564);
+		
+		pubmedFulldata = new Text(pubmedComposite, SWT.BORDER | SWT.MULTI);
+		pubmedFulldata.setEditable(false);
+		pubmedFulldata.setBounds(266, 11, 1046, 564);
+		
+		//-------------------------------------------------------------
+		
+		TabItem proteinTabItem = new TabItem(tabFolder, SWT.NONE);
+		proteinTabItem.setText("protein");
+		
+		Composite proteinComposite = new Composite(tabFolder, SWT.NONE);
+		proteinTabItem.setControl(proteinComposite);
+		
+		proteinList = new List(proteinComposite, SWT.BORDER);
+		proteinList.setBounds(10, 10, 250, 564);
+		
+		proteinFulldata = new Text(proteinComposite, SWT.BORDER | SWT.MULTI);
+		proteinFulldata.setEditable(false);
+		proteinFulldata.setBounds(266, 11, 1046, 564);
+		
+		//-------------------------------------------------------------
+		
+		TabItem geneTabItem = new TabItem(tabFolder, SWT.NONE);
+		geneTabItem.setText("gene");
+		
+		Composite geneComposite = new Composite(tabFolder, SWT.NONE);
+		geneTabItem.setControl(geneComposite);
+		
+		geneList = new List(geneComposite, SWT.BORDER);
+		geneList.setBounds(10, 10, 250, 564);
+		
+		geneFulldata = new Text(geneComposite, SWT.BORDER | SWT.MULTI);
+		geneFulldata.setEditable(false);
+		geneFulldata.setBounds(266, 11, 1046, 564);
+		
+		//-------------------------------------------------------------
+		
+		TabItem structureTabItem = new TabItem(tabFolder, SWT.NONE);
+		structureTabItem.setText("structure");
+		
+		Composite structureComposite = new Composite(tabFolder, SWT.NONE);
+		structureTabItem.setControl(structureComposite);
+		
+		structureList = new List(structureComposite, SWT.BORDER);
+		structureList.setBounds(10, 10, 250, 564);
+		
+		structureBrowser = new Browser(structureComposite, SWT.NONE);
+		structureBrowser.setBounds(266, 11, 1046, 564);
+		
+		//-------------------------------------------------------------
 		
 //		Button saveButton = new Button(shell, SWT.NONE);
 //		saveButton.addSelectionListener(new SelectionAdapter() {
