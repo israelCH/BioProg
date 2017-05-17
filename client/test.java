@@ -33,6 +33,8 @@ import persistentdatabase.model.Article;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
 import persistentdatabase.model.Structure;
+import persistentdatabase.model.Disease;
+
 
 import org.eclipse.swt.widgets.Composite;
 //import org.eclipse.swt.widgets.List;
@@ -54,6 +56,10 @@ public class test {
 	
 	private List structureList;
 	private Browser structureBrowser;
+	
+	private List DiseaseList;
+	private Text DiseaseFulldata;
+
 	
 	
 	Client client = null;
@@ -105,8 +111,14 @@ public class test {
 		Button searchBtn = new Button(shell, SWT.NONE);
 		searchBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
+			
+			
+			
 			public void widgetSelected(SelectionEvent e) {
+				
 				client = new Client();
+				Thread thread = new Thread(new Client());
+				thread.start();
 				try {
 					client.InitialConnection();
 					// נאפס את התוצאות הקודמות לפני החיפוש
@@ -118,11 +130,15 @@ public class test {
 					proteinFulldata.setText(" ");
 					geneList.removeAll();
 					geneFulldata.setText(" ");
+					
+					Thread t = new Thread(new ThreadblSearch());
+					t.start();
 										
 					searchPubmed();
 					searchProtein();
 					searchGene();			
 					searchStructure();
+					searchMalaCards();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					//result.setText("server error:" + e1.toString());
@@ -155,7 +171,8 @@ public class test {
 			}
 			
 			private void searchPubmed() throws Exception {
-				java.util.List<Article> arts = client.onlineSearch(text.getText(),DBType.PUBMED);
+				Client pub_client = new Client();
+				java.util.List<Article> arts = pub_client.onlineSearch(text.getText(),DBType.PUBMED);
 				for (Article art: arts)
 					pubmedList.add(art.getTitle());
 					
@@ -209,6 +226,25 @@ public class test {
 						int[] selectedItems = geneList.getSelectionIndices();
 						Gene gen = genes.get(selectedItems[0]);
 						geneFulldata.setText(gen.toString());
+					    }
+				});
+			}
+		
+			private void searchMalaCards() throws Exception {
+				java.util.List<Disease> diseases = client.onlineSearch(text.getText(),DBType.MALA_CARDS);				
+				for (Disease dis: diseases)
+					DiseaseList.add(dis.getName());
+					
+				DiseaseList.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent event) {
+					int[] selectedItems = DiseaseList.getSelectionIndices();
+					Disease dis = diseases.get(selectedItems[0]);
+					geneFulldata.setText(diseases.toString());
+				}
+				    public void widgetDefaultSelected(SelectionEvent event) {
+						int[] selectedItems = geneList.getSelectionIndices();
+						Disease dis = diseases.get(selectedItems[0]);
+						DiseaseFulldata.setText(dis.toString());
 					    }
 				});
 			}
