@@ -1,0 +1,11 @@
+/BiomodelsParser.class
+/CSVparser.class
+/MalaCardsParser.class
+/PubmedParser.class
+/XMLparser.class
+/NLMparser.class
+/GeneParser.class
+/ProteinParser.class
+/OMIMParser.class
+/StructureParser.class
+/MalaCardsParser$W3CBuilder.class

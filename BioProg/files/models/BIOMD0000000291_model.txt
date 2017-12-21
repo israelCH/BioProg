@@ -1,0 +1,16 @@
+
+      This a model from the article:
+      
+        
+        
+Nikolaev AV, Rozhilo YA, Starozhilova TK, Sarnatskaya VV, Yushko LA, Mikhailovskii SV, Kholodov AS, Lobanov AI.
+      2005 Sep;140(3):365-9.
+      ,
+      
+        
+        
+We proposed a mathematical model and estimated the parameters of adsorption of albumin-bilirubin complex to the surface of carbon pyropolymer. Design data corresponded to the results of experimental studies. Our findings indicate that modeling of this process should take into account fractal properties of the surface of carbon pyropolymer.
+   This model originates from BioModels Database: A Database of Annotated Published Models (http://www.ebi.ac.uk/biomodels/). It is copyright (c) 2005-2011 The BioModels.net Team.
+For more information see the .
+To cite BioModels Database, please use: 
+      
