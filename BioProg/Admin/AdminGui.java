@@ -146,13 +146,6 @@ public class AdminGui {
 					////W3CDom w3cDom = new W3CDom(); w3cDom.fromJsoup(____)...
 					//Document doc = Jsoup.connect("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=5LRB").timeout(10*1000).get();
 					//Element daf = doc.getElementsByTag("script").get(4);
-					// לנסות לשתול סקריפט בתוך הדף ולהציג בבראוזר שלנו
-					//StringBuilder str = new StringBuilder(daf.getTextContent());					
-					//str.insert(str.toString().indexOf("$( document ).ready"), "var myVar; function localFunction() { myVar = setTimeout(setVis, 3000); } function setVis () { $('div_0').text('ddd'); } ");
-					//str.insert(str.toString().indexOf("}); // document ready"), "localFunction();");
-					//doc.getElementsByTagName("script").item(4).setTextContent(str.toString());
-					//doc.setTextContent("ddd");
-					//structureBrowser.setText(str.toString());
 					
 				} catch (Exception e1) {
 					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
