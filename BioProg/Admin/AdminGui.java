@@ -29,6 +29,7 @@ import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
 import persistentdatabase.model.Structure;
+import user.UserClient;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
@@ -45,6 +46,7 @@ public class AdminGui {
 	private List proteinList;
 	private Text proteinFulldata;
 	public java.util.List<Protein> prots;
+	private Browser proteinBrowser;
 	
 	private List geneList;
 	private Text geneFulldata;
@@ -59,6 +61,10 @@ public class AdminGui {
 	private Text malacardsFulldata;	
 	
 	AdminClient client = null;
+	private Button localSearchBtn;
+	
+	UserClient uClient = null;
+
 
 	/**
 	 * Launch the application.
@@ -112,7 +118,7 @@ public class AdminGui {
 				client = new AdminClient();
 				try {
 					client.InitialConnection();
-					// נאפס את התוצאות הקודמות לפני החיפוש
+					// נאפס את התוצאות הקודמות לפני החיפוש new test
 					pubmedList.removeAll();
 					pubmedFulldata.setText(" ");
 					proteinList.removeAll();
@@ -135,7 +141,7 @@ public class AdminGui {
 					System.out.println("### Structure completed ###");
 					searchPubmed();
 					System.out.println("### Pubmed completed ###");
-					
+//					
 					// ....... ניסיונות
 					////W3CDom w3cDom = new W3CDom(); w3cDom.fromJsoup(____)...
 					//Document doc = Jsoup.connect("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=5LRB").timeout(10*1000).get();
@@ -162,11 +168,7 @@ public class AdminGui {
 				if (stru != null) {
 				for (Structure str: stru)
 					structureList.add(str.getPdbID() + " - " + str.getName());
-				}
-				
-				else {
-					structureBrowser.setUrl("http://blank.org/");
-				}
+
 					
 				structureList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
@@ -180,6 +182,12 @@ public class AdminGui {
 						structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
 					}
 				});
+				
+				}
+				
+				else {
+					structureBrowser.setUrl("http://www.gopropertymart.com/Images/other/norecord.png");
+					}
 			}
 			
 			private void searchPubmed() throws Exception {
@@ -215,23 +223,27 @@ public class AdminGui {
 				if(prots != null) {
 				for (Protein pro: prots)
 					proteinList.add(pro.getTitle());
-				}	
-				
-				else {
-					proteinFulldata.setText("No Result");
-				}
+
 				proteinList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
 					int[] selectedItems = proteinList.getSelectionIndices();
 					Protein pro = prots.get(selectedItems[0]);
 					proteinFulldata.setText(pro.toString());
+					proteinBrowser.setUrl("https://www.ncbi.nlm.nih.gov/projects/sviewer/?id=" + pro.getId());
 				}
 				    public void widgetDefaultSelected(SelectionEvent event) {
 						int[] selectedItems = proteinList.getSelectionIndices();
 						Protein pro = prots.get(selectedItems[0]);
 						proteinFulldata.setText(pro.toString());
+						proteinBrowser.setUrl("https://www.ncbi.nlm.nih.gov/projects/sviewer/?id=" + pro.getId());
 					    }
 				});
+				}	
+				
+				else {
+					proteinFulldata.setText("No Result");
+					proteinBrowser.setUrl("http://blank.org/");
+				}
 			}
 			
 			private void searchGene() throws Exception {
@@ -239,12 +251,7 @@ public class AdminGui {
 				if(genes != null) {
 				for (Gene gen: genes)
 					geneList.add(gen.getDesc());
-				}
-				
-				else {
-					geneFulldata.setText("No Result");
-					geneBrowser.setUrl("http://blank.org/");
-				}
+
 				geneList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
 					int[] selectedItems = geneList.getSelectionIndices();
@@ -259,6 +266,12 @@ public class AdminGui {
 						geneBrowser.setUrl("https://www.ncbi.nlm.nih.gov/genome/gdv/browser/?context=gene&acc=" + gen.getId());
 					    }
 				});
+				}
+				
+				else {
+					geneFulldata.setText("No Result");
+					geneBrowser.setUrl("http://blank.org/");
+				}
 			}
 			
 			private void searchMalaCards() throws Exception {
@@ -266,10 +279,7 @@ public class AdminGui {
 				if (diseases != null) {
 				for (Disease dis: diseases)
 					malacardsList.add(dis.getName());
-				}
-				else {
-					malacardsFulldata.setText("No Result");
-				}
+
 				malacardsList.addSelectionListener(new SelectionListener() {
 				public void widgetSelected(SelectionEvent event) {
 			    	malacardsFulldata.setText("");
@@ -278,7 +288,7 @@ public class AdminGui {
 					Disease dis = diseases.get(selectedItems[0]);
 					if(dis.getSummaries().equals("")){
 						dis = client.GetMiniCard(dis);
-//						dis.byRefPaste();						
+						diseases.set(selectedItems[0], dis);						
 					}
 					malacardsFulldata.setText(dis.toString());
 				}
@@ -288,15 +298,19 @@ public class AdminGui {
 						Disease dis = diseases.get(selectedItems[0]);
 						if(dis.getSummaries() == ""){
 							dis = client.GetMiniCard(dis);
-//							dis.byRefPaste();						
+							diseases.set(selectedItems[0], dis);				
 						}
 						malacardsFulldata.setText(dis.toString());
 					    }
 				});
+				}
+				else {
+					malacardsFulldata.setText("No Result");
+				}
 			}
 		});
 		searchBtn.setBounds(345, 24, 116, 32);
-		searchBtn.setText("Searce");
+		searchBtn.setText("Online Searce");
 		
 		shell.setDefaultButton(searchBtn);		
 		
@@ -311,7 +325,7 @@ public class AdminGui {
 		Composite pubmedComposite = new Composite(tabFolder, SWT.NONE);
 		pubmedTabItem.setControl(pubmedComposite);
 		
-		pubmedList = new List(pubmedComposite, SWT.BORDER | SWT.V_SCROLL);
+		pubmedList = new List(pubmedComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
 		pubmedList.setBounds(10, 10, 250, 564);
 		
 		pubmedFulldata = new Text(pubmedComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -326,12 +340,15 @@ public class AdminGui {
 		Composite proteinComposite = new Composite(tabFolder, SWT.NONE);
 		proteinTabItem.setControl(proteinComposite);
 		
-		proteinList = new List(proteinComposite, SWT.BORDER);
+		proteinList = new List(proteinComposite, SWT.BORDER | SWT.SINGLE);
 		proteinList.setBounds(10, 10, 250, 564);
 		
 		proteinFulldata = new Text(proteinComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		proteinFulldata.setEditable(false);
-		proteinFulldata.setBounds(266, 11, 1046, 564);
+		proteinFulldata.setBounds(266, 11, 1046, 234);
+		
+		proteinBrowser = new Browser(proteinComposite, SWT.NONE);
+		proteinBrowser.setBounds(266, 251, 1046, 323);
 		
 		//-------------------------------------------------------------
 		
@@ -341,7 +358,7 @@ public class AdminGui {
 		Composite geneComposite = new Composite(tabFolder, SWT.NONE);
 		geneTabItem.setControl(geneComposite);
 		
-		geneList = new List(geneComposite, SWT.BORDER);
+		geneList = new List(geneComposite, SWT.BORDER | SWT.SINGLE);
 		geneList.setBounds(10, 10, 250, 564);
 		
 		geneFulldata = new Text(geneComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -359,7 +376,7 @@ public class AdminGui {
 		Composite structureComposite = new Composite(tabFolder, SWT.NONE);
 		structureTabItem.setControl(structureComposite);
 		
-		structureList = new List(structureComposite, SWT.BORDER);
+		structureList = new List(structureComposite, SWT.BORDER | SWT.SINGLE);
 		structureList.setBounds(10, 10, 250, 564);
 		
 		structureBrowser = new Browser(structureComposite, SWT.NONE);
@@ -373,7 +390,7 @@ public class AdminGui {
 		Composite malacardsComposite = new Composite(tabFolder, SWT.NONE);
 		malacardsTabItem.setControl(malacardsComposite);
 		
-		malacardsList = new List(malacardsComposite, SWT.BORDER | SWT.V_SCROLL);
+		malacardsList = new List(malacardsComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
 		malacardsList.setBounds(10, 10, 250, 564);
 		
 		malacardsFulldata = new Text(malacardsComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -405,152 +422,202 @@ public class AdminGui {
 		});
 		saveButton.setBounds(471, 24, 116, 32);
 		saveButton.setText("save to local");
+		
+		localSearchBtn = new Button(shell, SWT.NONE);
+		localSearchBtn.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+				uClient = new UserClient();
+				
+				try {
+					uClient.InitialConnection();						
+					pubmedList.removeAll();
+					pubmedFulldata.setText(" ");
+					proteinList.removeAll();
+					proteinFulldata.setText(" ");
+					proteinBrowser.setUrl("http://blank.org/");
+					geneList.removeAll();
+					geneFulldata.setText(" ");
+					geneBrowser.setUrl("http://blank.org/");
+					structureList.removeAll();
+					structureBrowser.setUrl("http://blank.org/");
+					malacardsList.removeAll();
+					malacardsFulldata.setText(" ");
+										
+					mongoSearchGene();
+					System.out.println("### Mongo Gene completed ###");
+					mongoSearchMalaCards();
+					System.out.println("### Mongo MalaCard completed ###");
+					mongoSearchProtein();
+					System.out.println("### Mongo Protein completed ###");
+					mongoSearchStructure();
+					System.out.println("### Mongo Structure completed ###");
+					mongoSearchPubmed();
+					System.out.println("### Mongo Pubmed completed ###");
+					
+
+					
+				} catch (Exception e1) {
+					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
+					msb.setText("Warning");
+					msb.setMessage("David/Israel, \n an Error occured : \n" + e1.toString());
+					msb.open();
+				}
+				
+			}
+			
+			private void mongoSearchStructure() throws Exception {
+				stru = uClient.MongoSearch(text.getText(),DBType.STRUCTURE);				
+				if (stru != null) {
+					for (Structure str: stru)
+						structureList.add(str.getPdbID() + " - " + str.getName());			
+					
+					structureList.addSelectionListener(new SelectionListener() {
+						public void widgetSelected(SelectionEvent event) {
+							int[] selectedItems = structureList.getSelectionIndices();
+							Structure str = stru.get(selectedItems[0]);
+							structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
+						}
+						public void widgetDefaultSelected(SelectionEvent event) {
+					    	int[] selectedItems = structureList.getSelectionIndices();
+							Structure str = stru.get(selectedItems[0]);
+							structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
+						}
+					});
+				}
+				else {
+					structureBrowser.setUrl("http://www.gopropertymart.com/Images/other/norecord.png");
+				}
+			}
+			
+			private void mongoSearchPubmed() throws Exception {
+				arts =  uClient.MongoSearch(text.getText(),DBType.PUBMED);
+				if(arts != null){
+					for (Article art: arts)
+						pubmedList.add(art.getTitle());
+					
+				pubmedList.addSelectionListener(new SelectionListener() {
+				@Override
+				public void widgetSelected(SelectionEvent event) {
+					int[] selectedItems = pubmedList.getSelectionIndices();
+					Article art = arts.get(selectedItems[0]);
+					pubmedFulldata.setText(art.toString());
+					
+				}
+				    @Override
+					public void widgetDefaultSelected(SelectionEvent event) {
+						int[] selectedItems = pubmedList.getSelectionIndices();
+						Article art = arts.get(selectedItems[0]);
+						pubmedFulldata.setText(art.toString());
+					    }
+				});
+				}
+			else {
+				pubmedFulldata.setText("No Result");
+			}
+			}
+			
+			private void mongoSearchProtein() throws Exception {
+				prots = uClient.MongoSearch(text.getText(),DBType.PROTEIN);		
+				if (prots != null) {
+				for (Protein pro: prots)
+					proteinList.add(pro.getTitle());
+					
+				proteinList.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent event) {
+					int[] selectedItems = proteinList.getSelectionIndices();
+					Protein pro = prots.get(selectedItems[0]);
+					proteinFulldata.setText(pro.toString());
+					proteinBrowser.setUrl("https://www.ncbi.nlm.nih.gov/projects/sviewer/?id=" + pro.getId());
+				}
+				    public void widgetDefaultSelected(SelectionEvent event) {
+						int[] selectedItems = proteinList.getSelectionIndices();
+						Protein pro = prots.get(selectedItems[0]);
+						proteinFulldata.setText(pro.toString());
+						proteinBrowser.setUrl("https://www.ncbi.nlm.nih.gov/projects/sviewer/?id=" + pro.getId());
+					    }
+				});
+				}	
+				
+				else {
+					proteinFulldata.setText("No Result");
+					proteinBrowser.setUrl("http://blank.org/");
+				}
+			}
+			
+			private void mongoSearchGene() throws Exception {
+				genes = uClient.MongoSearch(text.getText(),DBType.GENE);	
+				if (genes != null) {
+				for (Gene gen: genes)
+					geneList.add(gen.getDesc());
+					
+				geneList.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent event) {
+					int[] selectedItems = geneList.getSelectionIndices();
+					Gene gen = genes.get(selectedItems[0]);
+					geneFulldata.setText(gen.toString());
+					geneBrowser.setUrl("https://www.ncbi.nlm.nih.gov/genome/gdv/browser/?context=gene&acc=" + gen.getId());
+				}
+				    public void widgetDefaultSelected(SelectionEvent event) {
+						int[] selectedItems = geneList.getSelectionIndices();
+						Gene gen = genes.get(selectedItems[0]);
+						geneFulldata.setText(gen.toString());
+						geneBrowser.setUrl("https://www.ncbi.nlm.nih.gov/genome/gdv/browser/?context=gene&acc=" + gen.getId());
+					    }
+				});
+				}
+				
+				else {
+					geneFulldata.setText("No Result");
+					geneBrowser.setUrl("http://blank.org/");
+				}
+			}
+			
+			private void mongoSearchMalaCards() throws Exception {
+				java.util.List<Disease> diseases = uClient.MongoSearch(text.getText(),DBType.MALA_CARDS);	
+				if (diseases != null) {
+				for (Disease dis: diseases)
+					malacardsList.add(dis.getName());
+					
+				malacardsList.addSelectionListener(new SelectionListener() {
+				public void widgetSelected(SelectionEvent event) {
+			    	malacardsFulldata.setText("");
+
+					int[] selectedItems = malacardsList.getSelectionIndices();
+					Disease dis = diseases.get(selectedItems[0]);
+					if(dis.getSummaries().equals("")){
+						dis = client.GetMiniCard(dis);
+						diseases.set(selectedItems[0], dis);
+					}
+					malacardsFulldata.setText(dis.toString());
+				}
+				    public void widgetDefaultSelected(SelectionEvent event) {
+				    	malacardsFulldata.setText("");
+				    	int[] selectedItems = malacardsList.getSelectionIndices();
+						Disease dis = diseases.get(selectedItems[0]);
+						if(dis.getSummaries() == ""){
+							dis = client.GetMiniCard(dis);
+							diseases.set(selectedItems[0], dis);
+						
+				    }
+						malacardsFulldata.setText(dis.toString());
+					    }
+				});
+				}
+				else {
+					malacardsFulldata.setText("No Result");
+				}
+			}
+		});
+		localSearchBtn.setText("Local Searce");
+		localSearchBtn.setBounds(602, 24, 116, 32);
 	}
 	
 	/**
 	 * Create contents of the window.
 	 */
-//	protected void createContentsPubmed()  {
-//		shell = new Shell();
-//		shell.setSize(676, 458);
-//		shell.setImage(SWTResourceManager.getImage(test.class, "/Images/icon.PNG"));
-//		shell.setBackgroundImage(SWTResourceManager.getImage(test.class, "/Images/search_background.jpg"));
-//		shell.setText("SWT Application");
-//		
-//		result = new  Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-//		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-//		result.setBounds(132, 62, 329, 248);	
-//		result.setSize((int)(shell.getBounds().width / 2), (int)(shell.getBounds().height * 0.6));
-//		
-//		composite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-//		composite.setLocation(10, 62);
-//		//composite.setSize(shell.getSize().x - shell.getClientArea().width,shell.getSize().y - shell.getClientArea().height);
-//		composite.setSize(shell.getBounds().width / 6, (int)(shell.getBounds().height * 0.6));
-//		composite.setExpandHorizontal(true);
-//		composite.setExpandVertical(true);
-//		GridLayout gl = new GridLayout();
-//		gl.numColumns = 1;
-//		
-//		org.eclipse.swt.widgets.List itemsList = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-//		
-//		Button btnNewButton = new Button(shell, SWT.NONE);
-//		btnNewButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				Client client = new Client();
-//				try {
-//					result.setText(" ");
-//					
-//					List<Article> art = client.testQuary4(text.getText());
-//					for (Article article: art)
-//						itemsList.add(article.getTitle());
-//						
-//					itemsList.addSelectionListener(new SelectionListener() {
-//					public void widgetSelected(SelectionEvent event) {
-//						int[] selectedItems = itemsList.getSelectionIndices();
-//						Article article = art.get(selectedItems[0]);
-////					      int[] selectedItems = itemsList.getSelectionIndices();
-////					      String outString = "";
-////					      for (int loopIndex = 0; loopIndex < selectedItems.length; loopIndex++)
-////					        outString += selectedItems[loopIndex] + " ";
-//					      result.setText(article.getAbstract());
-//					    }
-//
-//					    public void widgetDefaultSelected(SelectionEvent event) {
-//							int[] selectedItems = itemsList.getSelectionIndices();
-//							Article article = art.get(selectedItems[0]);
-//						    result.setText(article.getAbstract());
-//					    }
-//					});
-//					composite.setContent(itemsList);
-//						
-//						
-//				} catch (Exception e1) {
-//					// TODO Auto-generated catch block
-//					result.setText("server error");
-//					//e1.printStackTrace();
-//				}
-//
-//			}
-//		});
-//		btnNewButton.setBounds(345, 24, 116, 32);
-//		btnNewButton.setText("searce");
-//		
-//		shell.setDefaultButton(btnNewButton);
-//		
-//		text = new Text(shell, SWT.BORDER);
-//		text.setBounds(10, 24, 329, 32);
-//		text.setFocus();
-//		text.setText("blood"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-//	}
-	
-//	protected void createContentsNlmCatalog()  {
-//		shell = new Shell();
-//		shell.setImage(SWTResourceManager.getImage(test.class, "/Images/icon.PNG"));
-//		shell.setBackgroundImage(SWTResourceManager.getImage(test.class, "/Images/search_background.jpg"));
-//		shell.setSize(676, 458);
-//		shell.setText("SWT Application");
-//		
-//		result = new  Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-//		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-//		result.setBounds(132, 62, 329, 248);	
-//		result.setSize((int)(shell.getBounds().width / 2), (int)(shell.getBounds().height * 0.6));
-//		
-//		composite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-//		composite.setLocation(10, 62);
-//		composite.setSize(shell.getBounds().width / 6, (int)(shell.getBounds().height * 0.6));
-//		composite.setExpandHorizontal(true);
-//		composite.setExpandVertical(true);
 
-//		
-//		org.eclipse.swt.widgets.List itemsList = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-//		
-//		Button btnNewButton = new Button(shell, SWT.NONE);
-//		btnNewButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				Client client = new Client();
-//				try {
-//					result.setText(" ");
-//					
-//					List<Book> books = client.testQuary5(text.getText());
-//					for (Book book: books)
-//						itemsList.add(book.getTitle());
-//						
-//					itemsList.addSelectionListener(new SelectionListener() {
-//					public void widgetSelected(SelectionEvent event) {
-//						int[] selectedItems = itemsList.getSelectionIndices();
-//						Book book = books.get(selectedItems[0]);
-//					      result.setText(book.toString());
-//					    }
-//
-//					    public void widgetDefaultSelected(SelectionEvent event) {
-//							int[] selectedItems = itemsList.getSelectionIndices();
-//							Book book = books.get(selectedItems[0]);
-//						      result.setText(book.toString());
-//						    }
-//					});
-//					composite.setContent(itemsList);
-//						
-//						
-//				} catch (Exception e1) {
-//					// TODO Auto-generated catch block
-//					result.setText("server error");
-//					//e1.printStackTrace();
-//				}
-//
-//			}
-//		});
-//		btnNewButton.setBounds(345, 24, 116, 32);
-//		btnNewButton.setText("searce");
-//		
-//		shell.setDefaultButton(btnNewButton);
-//		
-//		text = new Text(shell, SWT.BORDER);
-//		text.setBounds(10, 24, 329, 32);
-//		text.setFocus();
-//		text.setText("blood"); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
-//	}
 	
 	protected void searchOnlineDatabases()  {
 		shell = new Shell();
@@ -560,128 +627,6 @@ public class AdminGui {
 		shell.setLocation(0,0);
 		shell.setText("Biology Databases");
 		
-//		composite = new ScrolledComposite(shell, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-//		composite.setLocation(10, 70);
-//		composite.setSize(shell.getBounds().width / 6, (int)(shell.getBounds().height * 0.8));
-//		GridLayout gl = new GridLayout();
-//		gl.numColumns = 1;
-		
-//		result = new Text(shell, SWT.READ_ONLY | SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-//		result.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-//		result.setBounds(
-//				composite.getBounds().x + composite.getBounds().width + 15,
-//				composite.getBounds().y,
-//				(int)(Display.getCurrent().getBounds().width),
-//				composite.getBounds().height  );
-//		result.setVisible(false); // !!!!!!!!!!!!!!!!!!!
-		
-//		Browser browser = new Browser(shell,SWT.NONE);
-		//browser.setBounds(132,62,451,274);
-//		browser.setBounds(
-//				composite.getBounds().x + composite.getBounds().width + 15,
-//				composite.getBounds().y,
-//				(int)(Display.getCurrent().getBounds().width / 1.5),
-//				composite.getBounds().height  );
-//		browser.setVisible(true); // !!!!!!!!!!!!!!!!!
-//		browser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=5U68");
-//		
-//		org.eclipse.swt.widgets.List itemsList = new org.eclipse.swt.widgets.List(composite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
-//		
-//		Button btnNewButton = new Button(shell, SWT.NONE);
-//		btnNewButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				Client clientSearch = new Client();
-//				try {
-//					clientSearch.InitialConnection();
-////					result.setText(" ");
-//					
-//					List<Structure> books = clientSearch.onlineSearch(text.getText());
-//					itemsList.removeAll(); // ניקוי היסטוריה
-//					for (Structure str: books)
-//						itemsList.add(str.toString());
-//						
-//					itemsList.addSelectionListener(new SelectionListener() {
-//					public void widgetSelected(SelectionEvent event) {
-//						int[] selectedItems = itemsList.getSelectionIndices();
-//						Structure str = books.get(selectedItems[0]);
-////					    result.setText(str.toString());
-//					} // לשנות לפניה לשרת לשלוף מאמר שלם
-//
-//					    public void widgetDefaultSelected(SelectionEvent event) {
-//							int[] selectedItems = itemsList.getSelectionIndices();
-//							Structure str = books.get(selectedItems[0]);
-////						      result.setText(str.toString());
-//						    } // 
-//					});
-////					composite.setContent(itemsList);
-//						
-//						
-//				} catch (Exception e1) {
-//					// TODO Auto-generated catch block
-////					result.setText("server error:" + e1.toString());
-//					//e1.printStackTrace();
-//				}
-//
-//			}
-//		});
-//		btnNewButton.setBounds(467, 24, 116, 32);
-//		btnNewButton.setText("searce");
-//		
-//		shell.setDefaultButton(btnNewButton);		
-		
-//		shell.addControlListener(new ControlAdapter() {			
-//			@Override
-//			public void controlResized(ControlEvent e) {
-//				// TODO Auto-generated method stub
-//				//shell.setBounds(shell.getClientArea());
-//			}
-//		});
-		
-//		Button saveButton = new Button(shell, SWT.NONE);
-//		saveButton.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				Client clientSearch = new Client();
-//				try {
-//					clientSearch.InitialConnection();
-////					result.setText(" ");
-//					
-//					List<Structure> books = clientSearch.onlineSearch(text.getText());
-//					itemsList.removeAll(); // ניקוי היסטוריה
-//					for (Structure str: books)
-//						itemsList.add(str.getName());
-//						
-//					itemsList.addSelectionListener(new SelectionListener() {
-//					public void widgetSelected(SelectionEvent event) {
-//						int[] selectedItems = itemsList.getSelectionIndices();
-//						Structure str = books.get(selectedItems[0]);
-////					      result.setText(str.toString());
-//					    } // לשנות לפניה לשרת לשלוף מאמר שלם
-//
-//					    public void widgetDefaultSelected(SelectionEvent event) {
-//							int[] selectedItems = itemsList.getSelectionIndices();
-//							Structure str = books.get(selectedItems[0]);
-////						      result.setText(str.toString());
-//						    } // 
-//					});
-////					composite.setContent(itemsList);
-//						
-//						
-//				} catch (Exception e1) {
-//					// TODO Auto-generated catch block
-////					result.setText("server error:" + e1.toString());
-//					//e1.printStackTrace();
-//				}
-//
-//			}
-//		});
-//		saveButton.setBounds(345, 24, 116, 32);
-//		saveButton.setText("save to local");
-//		
-//		text = new Text(shell, SWT.BORDER);
-//		text.setBounds(10, 24, 329, 32);
-//		text.setFocus();
-//		text.setText("blood");
+	text.setText("blood");
 	}
 }

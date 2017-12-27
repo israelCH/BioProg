@@ -104,6 +104,7 @@ public class PersistAgentMongoDB {
 			opt.upsert(true);
 			if(collection.findOneAndReplace(bdoc, doc)== null){
 				collection.insertOne(doc);
+				
 			}
 			return true;
 			 }

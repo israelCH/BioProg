@@ -71,23 +71,38 @@ public class UserClient {
 		switch (type) {
 		case STRUCTURE:
 			List<Structure> ansStru = (List<Structure>) input.readObject();
-			return (List<T>) ansStru;
+			if (ansStru.size() > 0)
+				return (List<T>) ansStru;
+				else
+					return null;
 		case PUBMED:
 			 obj = input.readObject();
 			List<Article> ansPub = (List<Article>) obj;
-			return (List<T>) ansPub;
+			if (ansPub.size() > 0)
+				return (List<T>) ansPub;
+				else
+					return null;
 		case PROTEIN:
 			 obj = input.readObject();
 			List<Protein> ansPro = (List<Protein>) obj;
-			return (List<T>) ansPro;
+			if (ansPro.size() > 0)
+				return (List<T>) ansPro;
+				else
+					return null;
 		case GENE:
 			obj = input.readObject();
 			List<Gene> ansGene = (List<Gene>) obj;
-			return (List<T>) ansGene;
+			if (ansGene.size() > 0)
+				return (List<T>) ansGene;
+				else
+					return null;
 		case MALA_CARDS:
 			obj = input.readObject();
 			List<Disease> ansMalacards = (List<Disease>) obj;
+			if (ansMalacards.size() > 0)
 			return (List<T>) ansMalacards;
+			else
+				return null;
 			
 		default:
 			return null;

@@ -60,6 +60,7 @@ public class UserGui {
 	private Text malacardsFulldata;	
 	
 	UserClient client = null;
+	private Browser proteinBrowser;
 
 	/**
 	 * Launch the application.
@@ -118,6 +119,7 @@ public class UserGui {
 					pubmedFulldata.setText(" ");
 					proteinList.removeAll();
 					proteinFulldata.setText(" ");
+					proteinBrowser.setUrl("http://blank.org");
 					geneList.removeAll();
 					geneFulldata.setText(" ");
 					geneBrowser.setUrl("http://blank.org/");
@@ -150,29 +152,33 @@ public class UserGui {
 			
 			private void searchStructure() throws Exception {
 				stru = client.MongoSearch(text.getText(),DBType.STRUCTURE);				
-				for (Structure str: stru)
-					structureList.add(str.getPdbID() + " - " + str.getName());
+				if (stru != null) {
+					for (Structure str: stru)
+						structureList.add(str.getPdbID() + " - " + str.getName());			
 					
-				structureList.addSelectionListener(new SelectionListener() {
-				public void widgetSelected(SelectionEvent event) {
-					int[] selectedItems = structureList.getSelectionIndices();
-					Structure str = stru.get(selectedItems[0]);
-					structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
+					structureList.addSelectionListener(new SelectionListener() {
+						public void widgetSelected(SelectionEvent event) {
+							int[] selectedItems = structureList.getSelectionIndices();
+							Structure str = stru.get(selectedItems[0]);
+							structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
+						}
+						public void widgetDefaultSelected(SelectionEvent event) {
+					    	int[] selectedItems = structureList.getSelectionIndices();
+							Structure str = stru.get(selectedItems[0]);
+							structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
+						}
+					});
 				}
-				    public void widgetDefaultSelected(SelectionEvent event) {
-				    	int[] selectedItems = structureList.getSelectionIndices();
-						Structure str = stru.get(selectedItems[0]);
-						structureBrowser.setUrl("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=" + str.getPdbID());
-					}
-				});
+				else {
+					structureBrowser.setUrl("http://www.gopropertymart.com/Images/other/norecord.png");
+				}
 			}
 			
 			private void searchPubmed() throws Exception {
 				arts =  client.MongoSearch(text.getText(),DBType.PUBMED);
-				if(arts != null)
-					{
-				for (Article art: arts)
-					pubmedList.add(art.getTitle());
+				if(arts != null){
+					for (Article art: arts)
+						pubmedList.add(art.getTitle());
 					
 				pubmedList.addSelectionListener(new SelectionListener() {
 				@Override
@@ -189,11 +195,15 @@ public class UserGui {
 						pubmedFulldata.setText(art.toString());
 					    }
 				});
-					}
+				}
+			else {
+				pubmedFulldata.setText("No Result");
+			}
 			}
 			
 			private void searchProtein() throws Exception {
-				prots = client.MongoSearch(text.getText(),DBType.PROTEIN);				
+				prots = client.MongoSearch(text.getText(),DBType.PROTEIN);		
+				if (prots != null) {
 				for (Protein pro: prots)
 					proteinList.add(pro.getTitle());
 					
@@ -202,17 +212,26 @@ public class UserGui {
 					int[] selectedItems = proteinList.getSelectionIndices();
 					Protein pro = prots.get(selectedItems[0]);
 					proteinFulldata.setText(pro.toString());
+					proteinBrowser.setUrl("https://www.ncbi.nlm.nih.gov/projects/sviewer/?id=" + pro.getId());
 				}
 				    public void widgetDefaultSelected(SelectionEvent event) {
 						int[] selectedItems = proteinList.getSelectionIndices();
 						Protein pro = prots.get(selectedItems[0]);
 						proteinFulldata.setText(pro.toString());
+						proteinBrowser.setUrl("https://www.ncbi.nlm.nih.gov/projects/sviewer/?id=" + pro.getId());
 					    }
 				});
+				}	
+				
+				else {
+					proteinFulldata.setText("No Result");
+					proteinBrowser.setUrl("http://blank.org");
+				}
 			}
 			
 			private void searchGene() throws Exception {
-				genes = client.MongoSearch(text.getText(),DBType.GENE);				
+				genes = client.MongoSearch(text.getText(),DBType.GENE);	
+				if (genes != null) {
 				for (Gene gen: genes)
 					geneList.add(gen.getDesc());
 					
@@ -230,10 +249,17 @@ public class UserGui {
 						geneBrowser.setUrl("https://www.ncbi.nlm.nih.gov/genome/gdv/browser/?context=gene&acc=" + gen.getId());
 					    }
 				});
+				}
+				
+				else {
+					geneFulldata.setText("No Result");
+					geneBrowser.setUrl("http://blank.org/");
+				}
 			}
 			
 			private void searchMalaCards() throws Exception {
-				java.util.List<Disease> diseases = client.MongoSearch(text.getText(),DBType.MALA_CARDS);				
+				java.util.List<Disease> diseases = client.MongoSearch(text.getText(),DBType.MALA_CARDS);	
+				if (diseases != null) {
 				for (Disease dis: diseases)
 					malacardsList.add(dis.getName());
 					
@@ -243,23 +269,28 @@ public class UserGui {
 
 					int[] selectedItems = malacardsList.getSelectionIndices();
 					Disease dis = diseases.get(selectedItems[0]);
-					if(dis.getSummaries().equals("")){
-						dis = client.GetMiniCard(dis);
-//						dis.byRefPaste();						
-					}
+//					if(dis.getSummaries().equals("")){
+//						dis = client.GetMiniCard(dis);
+//						diseases.set(selectedItems[0], dis);
+//					}
 					malacardsFulldata.setText(dis.toString());
 				}
 				    public void widgetDefaultSelected(SelectionEvent event) {
 				    	malacardsFulldata.setText("");
 				    	int[] selectedItems = malacardsList.getSelectionIndices();
 						Disease dis = diseases.get(selectedItems[0]);
-						if(dis.getSummaries() == ""){
-							dis = client.GetMiniCard(dis);
-//							dis.byRefPaste();						
-						}
+//						if(dis.getSummaries() == ""){
+//							dis = client.GetMiniCard(dis);
+//							diseases.set(selectedItems[0], dis);
+//						
+//				    }
 						malacardsFulldata.setText(dis.toString());
 					    }
 				});
+				}
+				else {
+					malacardsFulldata.setText("No Result");
+				}
 			}
 		});
 		searchBtn.setBounds(345, 24, 116, 32);
@@ -278,7 +309,7 @@ public class UserGui {
 		Composite pubmedComposite = new Composite(tabFolder, SWT.NONE);
 		pubmedTabItem.setControl(pubmedComposite);
 		
-		pubmedList = new List(pubmedComposite, SWT.BORDER | SWT.V_SCROLL);
+		pubmedList = new List(pubmedComposite, SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE);
 		pubmedList.setBounds(10, 10, 250, 564);
 		
 		pubmedFulldata = new Text(pubmedComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -293,12 +324,15 @@ public class UserGui {
 		Composite proteinComposite = new Composite(tabFolder, SWT.NONE);
 		proteinTabItem.setControl(proteinComposite);
 		
-		proteinList = new List(proteinComposite, SWT.BORDER);
+		proteinList = new List(proteinComposite, SWT.BORDER | SWT.SINGLE);
 		proteinList.setBounds(10, 10, 250, 564);
 		
 		proteinFulldata = new Text(proteinComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		proteinFulldata.setEditable(false);
-		proteinFulldata.setBounds(266, 11, 1046, 564);
+		proteinFulldata.setBounds(266, 11, 1046, 234);
+		
+		proteinBrowser = new Browser(proteinComposite, SWT.NONE);
+		proteinBrowser.setBounds(266, 251, 1046, 323);
 		
 		//-------------------------------------------------------------
 		
@@ -308,7 +342,7 @@ public class UserGui {
 		Composite geneComposite = new Composite(tabFolder, SWT.NONE);
 		geneTabItem.setControl(geneComposite);
 		
-		geneList = new List(geneComposite, SWT.BORDER);
+		geneList = new List(geneComposite, SWT.BORDER | SWT.SINGLE);
 		geneList.setBounds(10, 10, 250, 564);
 		
 		geneFulldata = new Text(geneComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
@@ -326,7 +360,7 @@ public class UserGui {
 		Composite structureComposite = new Composite(tabFolder, SWT.NONE);
 		structureTabItem.setControl(structureComposite);
 		
-		structureList = new List(structureComposite, SWT.BORDER);
+		structureList = new List(structureComposite, SWT.BORDER | SWT.SINGLE);
 		structureList.setBounds(10, 10, 250, 564);
 		
 		structureBrowser = new Browser(structureComposite, SWT.NONE);
@@ -340,10 +374,10 @@ public class UserGui {
 		Composite malacardsComposite = new Composite(tabFolder, SWT.NONE);
 		malacardsTabItem.setControl(malacardsComposite);
 		
-		malacardsList = new List(malacardsComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
+		malacardsList = new List(malacardsComposite, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.SINGLE);
 		malacardsList.setBounds(10, 10, 250, 564);
 		
-		malacardsFulldata = new Text(malacardsComposite, SWT.BORDER | SWT.MULTI);
+		malacardsFulldata = new Text(malacardsComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		malacardsFulldata.setEditable(false);
 		malacardsFulldata.setBounds(266, 11, 1046, 564);
 	}
