@@ -1,19 +1,7 @@
 package Admin;
 
-// ma ma ma
-// ma ma ma
-// ma ma ma
-// ma ma ma
-// ma ma ma
-// ma ma ma
-// ma ma ma
-
-//import javax.persistence.Convert;
-
-//import org.eclipse.persistence.oxm.json.JsonParserSource;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-//import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
@@ -25,13 +13,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
-//import org.jsoup.Jsoup;
-//import org.jsoup.helper.W3CDom;
-//import org.jsoup.nodes.Document;
-//import org.jsoup.nodes.Element;
 
 import database.DataBase.DBType;
-//import parsers.XMLparser;
 import persistentdatabase.model.Article;
 import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
