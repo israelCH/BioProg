@@ -1,5 +1,13 @@
 package Admin;
 
+// ma ma ma
+// ma ma ma
+// ma ma ma
+// ma ma ma
+// ma ma ma
+// ma ma ma
+// ma ma ma
+
 //import javax.persistence.Convert;
 
 //import org.eclipse.persistence.oxm.json.JsonParserSource;
@@ -146,6 +154,7 @@ public class AdminGui {
 					////W3CDom w3cDom = new W3CDom(); w3cDom.fromJsoup(____)...
 					//Document doc = Jsoup.connect("https://www.ncbi.nlm.nih.gov/Structure/icn3d/full.html?pdbid=5LRB").timeout(10*1000).get();
 					//Element daf = doc.getElementsByTag("script").get(4);
+					
 					
 				} catch (Exception e1) {
 					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
@@ -623,3 +632,4 @@ public class AdminGui {
 	text.setText("blood");
 	}
 }
+
