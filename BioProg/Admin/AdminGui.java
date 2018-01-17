@@ -1,5 +1,7 @@
 package Admin;
 
+import javax.swing.JFrame;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Display;
@@ -11,6 +13,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+//import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -25,7 +28,7 @@ import user.UserClient;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.MessageBox;
 
-public class AdminGui {
+public class AdminGui  {
 
 	protected Shell shell;
 	private Text text;
@@ -55,6 +58,7 @@ public class AdminGui {
 	private Button localSearchBtn;
 	
 	UserClient uClient = null;
+	private Button settingBtn;
 
 
 	/**
@@ -100,6 +104,31 @@ public class AdminGui {
 		text.setBounds(10, 24, 329, 32);
 		text.setFocus();
 		text.setText("blood");
+		
+		settingBtn = new Button(shell, SWT.PUSH);
+		settingBtn.setBounds(1268, 10, 72, 32);
+		//Image image = new Image(Display.getCurrent(),"/BioProg/Images/Setting.png");
+		settingBtn.setImage(SWTResourceManager.getImage(AdminGui.class, "/BioProg/Images/Setting.png"));
+		settingBtn.setText("Settings");
+		settingBtn.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//client = new AdminClient();
+				try {
+					//client.InitialConnection();
+					AdminSettings setWin = new AdminSettings();
+					setWin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					setWin.setVisible(true);
+				} 
+				catch (Exception e1) {
+					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
+					msb.setText("Warning");
+					msb.setMessage("Error occured while settings: " + e1.toString());
+					msb.open();
+				}
+
+			}
+		});
 		
 		//---------------------------------------------------------------
 		Button searchBtn = new Button(shell, SWT.NONE);

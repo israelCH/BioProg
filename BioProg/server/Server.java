@@ -36,8 +36,8 @@ import parsers.ProteinParser;
 import parsers.PubmedParser;
 import parsers.StructureParser;
 import persistentdatabase.main.PersistAgent;
-import persistentdatabase.main.PersistAgentFactory;
 import persistentdatabase.main.PersistAgentMongoDB;
+import persistentdatabase.main.PersistSettings;
 import persistentdatabase.model.Article;
 import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
@@ -98,6 +98,7 @@ public class Server {
                 while (true) {
                     String input;
                     Disease inp;
+                    PersistSettings ps;
                     List<Structure> resSturcture;
                     List<Article> resPubmed;
                     List<Protein> resProtein;
@@ -179,7 +180,22 @@ public class Server {
 								else
 									out.writeObject(false);
 		                    	break;
-		                    	//1234
+		                    	
+							case "setSettings": // שמירת החיבור למונגו
+								input = (String) in.readObject(); // קורא את המפתח הנדרש
+								ps = new PersistSettings();
+								if (ps.saveProp("MongoURI", input).equals(""))
+									out.writeObject(true);
+								else
+									out.writeObject(false);
+		                    	break;
+		                    	
+							case "getSettings": // קריאת החיבור למונגו
+								ps = new PersistSettings();
+								input = ps.getProp("MongoURI");
+								out.writeObject(input);
+		                    	break;
+		                    	
 							default:
 								break;
 							}

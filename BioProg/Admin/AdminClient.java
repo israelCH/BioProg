@@ -132,4 +132,20 @@ public class AdminClient {
 		}
 
 	}
+	
+	public Boolean updateMongoDbConnection (String con) throws Exception // פונה לשרת
+	{
+		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
+		output.writeObject("setSettings"); // שולחים פקודת הגדרות
+		output.writeObject(con); // שולחים את השורת תקשורת למונגו
+		// נחזיר את תגובת השרת אם נשמר או לא
+		return (Boolean) input.readObject();
+	}
+	
+	public String getMongoDbConnection () throws Exception // פונה לשרת
+	{
+		// יצרנו כבר פתיחת תקשורת חוץ בפונקצית איתחול תקשורת
+		output.writeObject("getSettings"); // פקודה לבקשת הנתון
+		return (String) input.readObject();
+	}
 }
