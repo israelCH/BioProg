@@ -1,21 +1,14 @@
 package parsers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-//import org.w3c.dom.Node;
-//import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
-//import javafx.css.ParsedValue;
 import persistentdatabase.model.Gene;
-//import persistentdatabase.model.GeneLocHist;
 
 public class GeneParser extends XMLparser {
 	List<Gene> _genes = new ArrayList<Gene>();

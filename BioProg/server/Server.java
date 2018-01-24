@@ -1,59 +1,37 @@
 package server;
 
-import java.awt.Toolkit;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
-import org.jsoup.Jsoup;
 import org.jsoup.helper.W3CDom;
 import org.w3c.dom.Document;
 
-import com.mongodb.Block;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 //import com.oracle.xmlns.internal.webservices.jaxws_databinding.ExistingAnnotationsType;
 
-import database.DataBase;
 import database.Query;
 import database.DataBase.DBType;
 import database.Query.SearchType;
 import parsers.GeneParser;
 import parsers.MalaCardsParser;
-import parsers.NLMparser;
 import parsers.ProteinParser;
 import parsers.PubmedParser;
 import parsers.StructureParser;
-import persistentdatabase.main.PersistAgent;
 import persistentdatabase.main.PersistAgentMongoDB;
 import persistentdatabase.main.PersistSettings;
 import persistentdatabase.model.Article;
-import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
 import persistentdatabase.model.Structure;
 
 import urlInterfaces.Entrez;
-import urlInterfaces.MalaCards;
 
-//import org.apache.commons.lang.SerializationUtils;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class Server {
@@ -234,7 +212,7 @@ public class Server {
     //############ sharch in MongoDb #######################
     private static <T> List<T> searchMongo(DBType type, String str) {
     	try {  			
-			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
+			mongoAgent  = new PersistAgentMongoDB();
 			List<org.bson.Document> lst = mongoAgent.findInMongo(str, type);
 			
 			// Parse answer into a list
@@ -297,7 +275,7 @@ public class Server {
 		} else {
 			List<String> results = Entrez.searchEntrez(query);
 			
-			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
+			mongoAgent  = new PersistAgentMongoDB();
 			 query = new Query();
 			query.setDatabase(type);
 			query.setSearchType(SearchType.FETCH);
@@ -423,7 +401,7 @@ public class Server {
 	    	dis.setDrugs(ds.getDrugs());
 	    	dis.setTherapeutics(ds.getTherapeutics());
 			
-			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
+			mongoAgent  = new PersistAgentMongoDB();
 			org.bson.Document doc2 = mongoAgent.getTDoc(dis.getId(), DBType.MALA_CARDS);
 			
 			if (doc2 != null) {
@@ -442,7 +420,7 @@ public class Server {
 		
 	private static Boolean saveLocalFunction() {
     	try {
-    		PersistAgentMongoDB agent = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));//create connection
+    		PersistAgentMongoDB agent = new PersistAgentMongoDB();//create connection
     		List<org.bson.Document> tmp = new ArrayList<org.bson.Document>();
     		
     		// save Pubmed

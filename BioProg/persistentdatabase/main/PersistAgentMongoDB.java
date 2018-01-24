@@ -10,15 +10,10 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.operation.CreateIndexesOperation;
 
-import Admin.AdminClient;
 import database.DataBase;
 import database.DataBase.DBType;
-
-import persistentdatabase.model.Persistable;
 
 public class PersistAgentMongoDB {
 
@@ -26,10 +21,12 @@ public class PersistAgentMongoDB {
 	private static MongoClient mongoClient;
 	private MongoDatabase mongoDatabase;
 	
-	public PersistAgentMongoDB(String MongoUri) {
+	public PersistAgentMongoDB() {
+		//String MongoUri;
 		if (uri == null)
 			//uri = new MongoClientURI(new DataBase(DBType.MONGODB).getPath());
-			uri = new MongoClientURI(MongoUri);
+			//uri = new MongoClientURI(MongoUri);//
+			uri = new MongoClientURI(new PersistSettings("Server").getProp("MongoURI"));
 		if (mongoClient == null){
 			mongoClient = new MongoClient(uri);
 			System.out.println("### new mongo uri connection ###");

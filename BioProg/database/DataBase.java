@@ -14,7 +14,6 @@ import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;
 import persistentdatabase.model.Structure;
-import urlInterfaces.MalaCards;
 
 public class DataBase {
 	

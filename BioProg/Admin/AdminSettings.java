@@ -1,18 +1,10 @@
 package Admin;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
-
-import com.mongodb.Mongo;
 
 import persistentdatabase.main.PersistSettings;
 
@@ -25,9 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.util.Properties;
 import java.awt.event.ActionEvent;
 
 public class AdminSettings extends JFrame {

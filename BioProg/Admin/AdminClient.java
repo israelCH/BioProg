@@ -26,7 +26,6 @@
 
 package Admin;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -36,7 +35,6 @@ import database.DataBase;
 import database.DataBase.DBType;
 import persistentdatabase.main.PersistSettings;
 import persistentdatabase.model.Article;
-import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;

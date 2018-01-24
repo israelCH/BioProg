@@ -26,7 +26,6 @@
 
 package user;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -35,7 +34,6 @@ import java.util.List;
 import database.DataBase;
 import database.DataBase.DBType;
 import persistentdatabase.model.Article;
-import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
 import persistentdatabase.model.Gene;
 import persistentdatabase.model.Protein;

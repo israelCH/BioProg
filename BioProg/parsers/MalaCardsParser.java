@@ -9,8 +9,6 @@ package parsers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-
 import org.jsoup.Jsoup;
 //import org.jsoup.helper.StringUtil;
 //import org.jsoup.select.NodeTraversor;

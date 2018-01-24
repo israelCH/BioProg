@@ -1,25 +1,13 @@
 package server;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.eclipse.wb.swt.SWTResourceManager;
-
-import com.sun.javafx.tk.Toolkit;
-
-import Admin.AdminGui;
-
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.Image;
-
-import javax.swing.JTextArea;
-import java.awt.SystemColor;
 
 public class ServerGui extends JFrame {
 
