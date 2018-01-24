@@ -40,7 +40,7 @@ public class DataBase {
 		else if (_dbType.equals(DBType.GENE)) 			{return "gene";   }
 		else if (_dbType.equals(DBType.MALA_CARDS))     {return "http://malacards.org/search/results/";}
 		else if (_dbType.equals(DBType.BIO_MODELS))		{return "https://www.ebi.ac.uk/biomodels-main/";}
-		else if (_dbType.equals(DBType.MONGODB))		{return "mongodb://BioProg:BioProg@cluster0-shard-00-00-qvbue.mongodb.net:27017,cluster0-shard-00-01-qvbue.mongodb.net:27017,cluster0-shard-00-02-qvbue.mongodb.net:27017/<DATABASE>?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin";}
+		//else if (_dbType.equals(DBType.MONGODB))		{return "mongodb://BioProg:BioProg@cluster0-shard-00-00-qvbue.mongodb.net:27017,cluster0-shard-00-01-qvbue.mongodb.net:27017,cluster0-shard-00-02-qvbue.mongodb.net:27017/<DATABASE>?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin";}
 		else return null;
 
 	}

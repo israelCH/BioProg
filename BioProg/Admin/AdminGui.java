@@ -103,7 +103,7 @@ public class AdminGui  {
 		text = new Text(shell, SWT.BORDER); // תיבת החיפוש
 		text.setBounds(10, 24, 329, 32);
 		text.setFocus();
-		text.setText("blood");
+		//text.setText("blood");
 		
 		settingBtn = new Button(shell, SWT.PUSH);
 		settingBtn.setBounds(1268, 10, 72, 32);
@@ -138,6 +138,9 @@ public class AdminGui  {
 				client = new AdminClient();
 				try {
 					client.InitialConnection();
+					if (client.getMongoDbConnection().substring(0, 5).equals("error")){ // אם חזרה שגיאה לא ניתן לחפש
+						throw new Exception("Mongo Uri not Configured !!");
+					}
 					// נאפס את התוצאות הקודמות לפני החיפוש new test
 					pubmedList.removeAll();
 					pubmedFulldata.setText(" ");
@@ -171,7 +174,7 @@ public class AdminGui  {
 				} catch (Exception e1) {
 					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
 					msb.setText("Warning");
-					msb.setMessage("David/Israel, \n an Error occured while searching: \n" + e1.toString());
+					msb.setMessage("an Error occured while searching: \n" + e1.toString());
 					msb.open();
 				}
 

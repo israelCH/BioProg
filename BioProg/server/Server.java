@@ -52,6 +52,7 @@ import urlInterfaces.MalaCards;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.swing.JFrame;
 
 public class Server {
 	
@@ -68,7 +69,10 @@ public class Server {
     public static void main(String[] args) throws Exception {
         System.out.println("The BioProg server is running.");
         int clientNumber = 0;
-                
+
+    	ServerGui serverGui = new ServerGui();
+    	serverGui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	serverGui.setVisible(true);
         
         ServerSocket listener = new ServerSocket(9898);
         try {
@@ -91,7 +95,7 @@ public class Server {
         }
         
         public void run() {
-            try {
+            try {            	
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
@@ -183,7 +187,7 @@ public class Server {
 		                    	
 							case "setSettings": // שמירת החיבור למונגו
 								input = (String) in.readObject(); // קורא את המפתח הנדרש
-								ps = new PersistSettings();
+								ps = new PersistSettings("Server");
 								if (ps.saveProp("MongoURI", input).equals(""))
 									out.writeObject(true);
 								else
@@ -191,7 +195,7 @@ public class Server {
 		                    	break;
 		                    	
 							case "getSettings": // קריאת החיבור למונגו
-								ps = new PersistSettings();
+								ps = new PersistSettings("Server");
 								input = ps.getProp("MongoURI");
 								out.writeObject(input);
 		                    	break;
@@ -228,7 +232,7 @@ public class Server {
     //############ sharch in MongoDb #######################
     private static <T> List<T> searchMongo(DBType type, String str) {
     	try {  			
-			mongoAgent  = new PersistAgentMongoDB();
+			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
 			List<org.bson.Document> lst = mongoAgent.findInMongo(str, type);
 			
 			// Parse answer into a list
@@ -291,7 +295,7 @@ public class Server {
 		} else {
 			List<String> results = Entrez.searchEntrez(query);
 			
-			mongoAgent  = new PersistAgentMongoDB();
+			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
 			 query = new Query();
 			query.setDatabase(type);
 			query.setSearchType(SearchType.FETCH);
@@ -417,7 +421,7 @@ public class Server {
 	    	dis.setDrugs(ds.getDrugs());
 	    	dis.setTherapeutics(ds.getTherapeutics());
 			
-			mongoAgent  = new PersistAgentMongoDB();
+			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
 			org.bson.Document doc2 = mongoAgent.getTDoc(dis.getId(), DBType.MALA_CARDS);
 			
 			if (doc2 != null) {
@@ -436,7 +440,7 @@ public class Server {
 		
 	private static Boolean saveLocalFunction() {
     	try {
-    		PersistAgentMongoDB agent = new PersistAgentMongoDB();//create connection
+    		PersistAgentMongoDB agent = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));//create connection
     		List<org.bson.Document> tmp = new ArrayList<org.bson.Document>();
     		
     		// save Pubmed

@@ -91,7 +91,7 @@ public class AdminSettings extends JFrame {
 			client.InitialConnection();
 			MongoUri = client.getMongoDbConnection();
 			mongoTxt.setText(MongoUri);
-			if (MongoUri.substring(0, 4).equals("error")){ // אם חזרה שגיאה לא ממלאים את השדה
+			if (MongoUri.substring(0, 5).equals("error")){ // אם חזרה שגיאה לא ממלאים את השדה
 				mongoTxt.setText("");
 				MongoUri = "";
 			}
@@ -104,9 +104,9 @@ public class AdminSettings extends JFrame {
 		IpTxt = new JTextField();
 		IpTxt.setFont(new Font("Tempus Sans ITC", Font.PLAIN, 16));
 		IpTxt.setBounds(158, 24, 156, 36);
-		Ip = new PersistSettings().getProp("ServerIp");
+		Ip = new PersistSettings("Admin").getProp("ServerIp");
 		IpTxt.setText(Ip);
-		if (Ip.substring(0, 4).equals("error")){ // אם חזרה שגיאה לא ממלאים את השדה
+		if (Ip.substring(0, 5).equals("error")){ // אם חזרה שגיאה לא ממלאים את השדה
 			IpTxt.setText("");
 			Ip = "";
 		}
@@ -116,25 +116,24 @@ public class AdminSettings extends JFrame {
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				PersistSettings ps;
 				try	{
 					if (!Ip.equals(IpTxt.getText())) {
 						// Save IP of server
-						PersistSettings ps = new PersistSettings();
+						ps = new PersistSettings("Admin");
 						String answer = ps.saveProp("ServerIp", IpTxt.getText());
-						if (answer.equals("")){
-							dispose(); // סוגר את החלון
-						}
-						else {
+						if (!answer.equals("")){
 							throw new Exception(answer);
 						}
 					}
 					
 					if (!MongoUri.equals(mongoTxt.getText())) {
-						// Save Mongo URI in server
+						// Save Mongo URI in server - saving in Admin not needed..
 						client = new AdminClient();
 						client.InitialConnection();
 						client.updateMongoDbConnection(mongoTxt.getText());
 					}
+					dispose(); // סוגר את החלון
 				}
 				catch (Exception e){
 					JOptionPane.showMessageDialog(null, "Error when tring to save settings !!/n" + e.toString());

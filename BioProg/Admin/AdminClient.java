@@ -34,6 +34,7 @@ import java.util.List;
 
 import database.DataBase;
 import database.DataBase.DBType;
+import persistentdatabase.main.PersistSettings;
 import persistentdatabase.model.Article;
 import persistentdatabase.model.Book;
 import persistentdatabase.model.Disease;
@@ -56,7 +57,7 @@ public class AdminClient {
 	ObjectOutputStream output;
 	ObjectInputStream input;
 	
-	public static void main(String[] args) throws Exception{	
+	public static void main(String[] args) throws Exception{
 		
 	}
 	
@@ -103,11 +104,19 @@ public class AdminClient {
 	}
 	
 	public void InitialConnection() throws Exception {
-		//System.out.println("before socket.");
-		ServerAddress = "127.0.0.1"; // <----- localhost
-		//ServerAddress = "192.168.203.3"; // <----- remoteServer
+		ServerAddress = new PersistSettings("Admin").getProp("ServerIp");
+		if (ServerAddress.substring(0, 5).equals("error")){ // אם חזרה שגיאה לא ניתן לחפש
+			throw new Exception("IP not Configured !!");
+		}
+		
+		//ServerAddress = "127.0.0.1"; // <----- localhost
 		ServerPort = 9898;
-		sock = new Socket(ServerAddress,ServerPort);
+		try {
+			sock = new Socket(ServerAddress,ServerPort);
+		}
+		catch (Exception ex) {
+			throw new Exception("Server not running !! cannot connect with server...");
+		}
 		//sock.setSoTimeout(10000);
 		//System.out.println("trying open output.");
 		output = new ObjectOutputStream(sock.getOutputStream());

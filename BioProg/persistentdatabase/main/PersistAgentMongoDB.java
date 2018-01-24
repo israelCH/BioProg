@@ -14,6 +14,7 @@ import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.operation.CreateIndexesOperation;
 
+import Admin.AdminClient;
 import database.DataBase;
 import database.DataBase.DBType;
 
@@ -25,9 +26,10 @@ public class PersistAgentMongoDB {
 	private static MongoClient mongoClient;
 	private MongoDatabase mongoDatabase;
 	
-	public PersistAgentMongoDB() {
+	public PersistAgentMongoDB(String MongoUri) {
 		if (uri == null)
-			uri = new MongoClientURI(new DataBase(DBType.MONGODB).getPath());
+			//uri = new MongoClientURI(new DataBase(DBType.MONGODB).getPath());
+			uri = new MongoClientURI(MongoUri);
 		if (mongoClient == null){
 			mongoClient = new MongoClient(uri);
 			System.out.println("### new mongo uri connection ###");

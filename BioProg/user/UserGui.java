@@ -1,5 +1,7 @@
 package user;
 
+import javax.swing.JFrame;
+
 //import javax.persistence.Convert;
 
 //import org.eclipse.persistence.oxm.json.JsonParserSource;
@@ -23,6 +25,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 //import org.jsoup.nodes.Element;
 
 import Admin.AdminClient;
+import Admin.AdminSettings;
 import database.DataBase.DBType;
 //import parsers.XMLparser;
 import persistentdatabase.model.Article;
@@ -61,6 +64,7 @@ public class UserGui {
 	
 	UserClient client = null;
 	private Browser proteinBrowser;
+	private Button settingBtn;
 
 	/**
 	 * Launch the application.
@@ -104,7 +108,7 @@ public class UserGui {
 		text = new Text(shell, SWT.BORDER); // תיבת החיפוש
 		text.setBounds(10, 24, 329, 32);
 		text.setFocus();
-		text.setText("blood");
+		//text.setText("blood");
 		
 		//---------------------------------------------------------------
 		Button searchBtn = new Button(shell, SWT.NONE);
@@ -380,6 +384,30 @@ public class UserGui {
 		malacardsFulldata = new Text(malacardsComposite, SWT.BORDER | SWT.MULTI | SWT.WRAP);
 		malacardsFulldata.setEditable(false);
 		malacardsFulldata.setBounds(266, 11, 1046, 564);
+		
+		settingBtn = new Button(shell, SWT.NONE);
+		settingBtn.setText("Settings");
+		settingBtn.setImage(SWTResourceManager.getImage(UserGui.class, "/BioProg/Images/Setting.png"));
+		settingBtn.setBounds(1268, 10, 72, 32);
+		settingBtn.addSelectionListener(new SelectionAdapter(){
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//client = new AdminClient();
+				try {
+					//client.InitialConnection();
+					UserSettings setWin = new UserSettings();
+					setWin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					setWin.setVisible(true);
+				} 
+				catch (Exception e1) {
+					MessageBox msb = new MessageBox(shell,SWT.ICON_ERROR);
+					msb.setText("Warning");
+					msb.setMessage("Error occured while settings: " + e1.toString());
+					msb.open();
+				}
+
+			}
+		});
 	}
 	
 	/**

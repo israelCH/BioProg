@@ -19,6 +19,7 @@ import org.bson.Document;
 
 import database.DataBase.DBType;
 import persistentdatabase.main.PersistAgentMongoDB;
+import persistentdatabase.main.PersistSettings;
 
 @Entity
 public class Disease implements Persistable, Serializable{
@@ -191,7 +192,7 @@ public class Disease implements Persistable, Serializable{
 	public void syncMongo() {
 		Document doc = null;		
 		
-			mongoAgent  = new PersistAgentMongoDB();
+			mongoAgent  = new PersistAgentMongoDB(new PersistSettings("Server").getProp("MongoURI"));
 			doc = mongoAgent.getTDoc(getId(), DBType.MALA_CARDS);
 			if (doc != null) {
 				if (!doc.getString("summaries").equals("")) {
