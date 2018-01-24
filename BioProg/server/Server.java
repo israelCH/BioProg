@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Toolkit;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -52,6 +53,7 @@ import urlInterfaces.MalaCards;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 public class Server {
@@ -303,7 +305,7 @@ public class Server {
 				if (mongoAgent.chackIfExist(id, type)){
 					if (existObj == null)
 						existObj = new ArrayList<String>() ;	
-					
+
 					existObj.add(id);
 					
 					}
