@@ -81,6 +81,7 @@ public class Server {
 
                 while (true) {
                     String input;
+                    Integer swClose = 0;
                     Disease inp;
                     PersistSettings ps;
                     List<Structure> resSturcture;
@@ -91,6 +92,10 @@ public class Server {
 					try {
 						input = (String) in.readObject(); // קריאה ראשונה של קוד פעולה
 	                    if (input != null && !input.equals("")) {
+	                    	if (! input.equals("setSettings") && ! input.equals("getSettings")) {
+	                    			swClose = 1; // מסמן שצריך לסגור את החיבור בסוף
+	                    			mongoAgent = new PersistAgentMongoDB();  // 06.09.18
+	                    	}
 	                    	switch (input) {
 							case "structure": // STRUCTURE חיפוש בבסיס נתונים
 								input = (String) in.readObject(); // קריאה שניה לקבל את המחרוזת לחיפוש
@@ -128,7 +133,7 @@ public class Server {
 								input = (String) in.readObject(); // קריאה שניה לקבל את המחרוזת לחיפוש
 								articles = null; // איפוס עבור חיפושים חוזרים
 								resPubmed = searchMongo(DBType.PUBMED, input);
-		                    	out.writeObject(resPubmed);		                    	
+		                    	out.writeObject(resPubmed);
 		                    	break;
 							case "proteinMongo": // PROTEIN חיפוש מונגו
 								input = (String) in.readObject(); // קריאה שניה לקבל את המחרוזת לחיפוש
@@ -183,15 +188,22 @@ public class Server {
 							default:
 								break;
 							}
+	                    	if (swClose == 1) {
+	                    		mongoAgent.closeConnection(); // 06.09.18
+	                    	}
 	                    }
-					} catch (ClassNotFoundException e) {
+					}
+					catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
                 }
             } 
             catch (EOFException e) {
-            	System.out.println("Eof error good night " + e);
+            	System.out.println("Eof error:" + e);
             	
             }
             catch (IOException e) {
@@ -212,7 +224,7 @@ public class Server {
     //############ sharch in MongoDb #######################
     private static <T> List<T> searchMongo(DBType type, String str) {
     	try {  			
-			mongoAgent  = new PersistAgentMongoDB();
+			//mongoAgent  = new PersistAgentMongoDB();
 			List<org.bson.Document> lst = mongoAgent.findInMongo(str, type);
 			
 			// Parse answer into a list
@@ -254,7 +266,13 @@ public class Server {
     	
 		} catch (Exception e1) {
 			return null;
-		}
+		} /* finally {
+            try {
+                mongoAgent.closeConnection();
+            } catch (Exception e2) {
+            	return null;
+            }
+        } */
     }
     
     
@@ -275,12 +293,12 @@ public class Server {
 		} else {
 			List<String> results = Entrez.searchEntrez(query);
 			
-			mongoAgent  = new PersistAgentMongoDB();
+			//mongoAgent  = new PersistAgentMongoDB();  06.09.18
 			 query = new Query();
 			query.setDatabase(type);
 			query.setSearchType(SearchType.FETCH);
 			for (String id: results){
-				if (mongoAgent.chackIfExist(id, type)){
+				if (mongoAgent.checkIfExist(id, type)){
 					if (existObj == null)
 						existObj = new ArrayList<String>() ;	
 
@@ -390,8 +408,8 @@ public class Server {
     	final String entrezFetchURL = "http://previous.malacards.org/card/"; 
 		String queryStr = entrezFetchURL + dis.getId();
 		System.out.println("Query URL: " + queryStr);
-		Document doc = null;		
-		try{
+		Document doc = null;
+		try {
 			org.jsoup.nodes.Document doci = org.jsoup.Jsoup.connect(queryStr).timeout(600000).header("Accept-Encoding", "gzip, deflate").maxBodySize(0).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36").get();
 			W3CDom w3cDom = new W3CDom();
 			doc = w3cDom.fromJsoup(doci);
@@ -401,7 +419,7 @@ public class Server {
 	    	dis.setDrugs(ds.getDrugs());
 	    	dis.setTherapeutics(ds.getTherapeutics());
 			
-			mongoAgent  = new PersistAgentMongoDB();
+			//mongoAgent  = new PersistAgentMongoDB();  06.09.18
 			org.bson.Document doc2 = mongoAgent.getTDoc(dis.getId(), DBType.MALA_CARDS);
 			
 			if (doc2 != null) {
@@ -412,7 +430,13 @@ public class Server {
 		}
 		catch (Exception ex) {
 			return null;
-		}
+		} /* finally {
+            try {
+                mongoAgent.closeConnection();
+            } catch (Exception e2) {
+            	return null;
+            }
+        } */
     }
     
     
@@ -426,7 +450,7 @@ public class Server {
     		// save Pubmed
     		if (articles != null){
     		for (Article art: articles){
-    			if (! agent.chackIfExist(art.getId(), DBType.PUBMED))
+    			if (! agent.checkIfExist(art.getId(), DBType.PUBMED))
     				tmp.add(art.toBson());
     		
     		}
@@ -437,7 +461,7 @@ public class Server {
     		//save Protein
     		if(proteins != null){
     		for (Protein pro: proteins){
-    			if (! agent.chackIfExist(pro.getId(), DBType.PROTEIN))
+    			if (! agent.checkIfExist(pro.getId(), DBType.PROTEIN))
     				tmp.add(pro.toBson());
     			
     		}
@@ -448,7 +472,7 @@ public class Server {
     		// save Gene
     		if (genes != null){
     		for (Gene gen: genes){
-    			if (! agent.chackIfExist(gen.getId(), DBType.GENE))
+    			if (! agent.checkIfExist(gen.getId(), DBType.GENE))
     				tmp.add(gen.toBson());
     		}
     		if (tmp != null)
@@ -458,7 +482,7 @@ public class Server {
        		// save Structure
     		if (structures != null){
     		for (Structure struc: structures){
-    			if (! agent.chackIfExist(struc.getId(), DBType.STRUCTURE))
+    			if (! agent.checkIfExist(struc.getId(), DBType.STRUCTURE))
     				tmp.add(struc.toBson());
     		}
     		if (tmp != null)
@@ -469,7 +493,7 @@ public class Server {
     		// save Malacards
     		if(diseases != null){
     		for (Disease mala: diseases){
-    			if (! agent.chackIfExist(mala.getId(), DBType.MALA_CARDS))
+    			if (! agent.checkIfExist(mala.getId(), DBType.MALA_CARDS))
     				tmp.add(mala.toBson());
     		}
     		if (tmp != null)

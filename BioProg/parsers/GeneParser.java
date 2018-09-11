@@ -46,10 +46,10 @@ public class GeneParser extends XMLparser {
 		}
 		
 		for(Element geneElement : geneElements) 
-			_genes.add(parseSingleArticle(geneElement));
+			_genes.add(parseSingleGene(geneElement));
 	}
 	
-	private Gene parseSingleArticle(Element geneEl) {
+	private Gene parseSingleGene(Element geneEl) {
 		try{
 		Gene gene = new Gene();
 		Element elem2;

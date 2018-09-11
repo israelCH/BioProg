@@ -10,19 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.Jsoup;
-//import org.jsoup.helper.StringUtil;
-//import org.jsoup.select.NodeTraversor;
-//import org.jsoup.nodes.Document;
-//import org.jsoup.nodes.Element;
-//import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
-
-//import com.sun.org.apache.xalan.internal.xsltc.dom.DOMBuilder;
 
 import persistentdatabase.model.Disease;
 import database.Query;
@@ -38,15 +29,8 @@ public class MalaCardsParser extends XMLparser {
 	
 	
 	public MalaCardsParser (Document doc, String key){
-	
-	//public MalaCardsParser (Document doc, Query query){
-		//Element rootEl = doc.getDocumentElement();
-	//	rootEl = rootEl.getElementById("body");
 		_doc = doc;
 		_keyword = key;
-		
-	//	_terms = terms;
-	//	_diseases = new ArrayList<Disease>();
 	}
 	
 	public MalaCardsParser (Document doc){
@@ -87,28 +71,8 @@ public class MalaCardsParser extends XMLparser {
 			_diseases.add(disease);
 			
 		}
-		
-		
-
-
 		final int LIMIT = 20;
 		int count = 0;
-		
-		// get all links
-/*		Elements links = _doc.select("a[href]");
-		Disease disease;
-		for (int ind = 0; ind < _terms.length; ind ++) {
-			for (Element link : links) {
-				if ( link.attr("href").contains(_terms[ind]) && (count < LIMIT) && (_terms[ind] != "")){
-					disease = new Disease();
-					disease.setURLlink( link.attr("href"));
-					disease.setName(link.text());
-					_diseases.add(disease);
-					count++;
-				}
-			}
-		}*/
-
 	  }
 	
 	public List<Disease> getDiseases(){ //יש לבצע משיכת נתונים מהמונגו

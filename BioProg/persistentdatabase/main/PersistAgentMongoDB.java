@@ -18,19 +18,46 @@ import database.DataBase.DBType;
 public class PersistAgentMongoDB {
 
 	private static MongoClientURI uri;
+	//private MongoClient mongoClient;
 	private static MongoClient mongoClient;
 	private MongoDatabase mongoDatabase;
+	
+/*	public class AppTest {
+
+	    @Test
+	    public void firstTest() throws Exception {
+	        MongoClient mongoClient = null;
+	        try {
+	            mongoClient = new MongoClient("127.0.0.1", 27017);
+	            MongoDatabase db = mongoClient.getDatabase("census");
+	            FindIterable<Document> iterable = db.getCollection("states").find();
+	            iterable.forEach(new Block<Document>() {
+	                @Override
+	                public void apply(final Document document) {
+	                    System.out.println(document);
+	                }
+	            });
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                mongoClient.close();
+	            } catch (Exception e2) {
+	            }
+	        }
+	    }
+
+	} */
 	
 	public PersistAgentMongoDB() {
 		//String MongoUri;
 		if (uri == null)
-			//uri = new MongoClientURI(new DataBase(DBType.MONGODB).getPath());
-			//uri = new MongoClientURI(MongoUri);//
+			//String perUri = new PersistSettings("Server").getProp("MongoURI");
 			uri = new MongoClientURI(new PersistSettings("Server").getProp("MongoURI"));
-		if (mongoClient == null){
-			mongoClient = new MongoClient(uri);
-			System.out.println("### new mongo uri connection ###");
-		}
+		mongoClient = null; // תמיד נאפס אותו וניצור חדש
+		mongoClient = new MongoClient(uri);
+		System.out.println("### new mongo uri connection ###");
+		
 		if (mongoDatabase == null)
 			mongoDatabase = mongoClient.getDatabase("BioProg");
 
@@ -40,9 +67,9 @@ public class PersistAgentMongoDB {
 
 		MongoCollection<Document> retColl = mongoDatabase.getCollection(db.getCollectionName());
 		return retColl;
-	}	
+	}
 		
-		public boolean chackIfExist(String id, DBType type){
+		public boolean checkIfExist(String id, DBType type){
 			DataBase db = new DataBase(type);
 			MongoCollection<Document> collection = getColl(db);
 			Document doc = new Document(db.getUniqueId(),id);
@@ -83,7 +110,6 @@ public class PersistAgentMongoDB {
 			saveDoc(res, type);
 			return res;
 		}
-		int i = 500;
 		public Document getTDoc(String id, DBType type){
 			DataBase db = new DataBase(type);
 			MongoCollection<Document> collection = getColl(db);

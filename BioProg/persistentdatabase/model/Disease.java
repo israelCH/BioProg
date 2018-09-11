@@ -54,6 +54,7 @@ public class Disease implements Persistable, Serializable{
 	 private List<String> aliases = new ArrayList<String>();
 	 private List<String>  genes  = new ArrayList<String>();
 	// private List<Model>    models    = new ArrayList<Model>();
+	 private List<String>  tags 	   = new ArrayList<String>();	
 	 
 	 public void setMCID(String id)		{	MCID = id; URLlink = "http://www.malacards.org/card/" + MCID; this.id=id;		}
 	 public void setName(String _name)  {	 name = _name;	 }
@@ -78,7 +79,6 @@ public class Disease implements Persistable, Serializable{
 	 public void addTag(String tag)          	 { tags.add(tag);     	    }
 //	 public void addModel(Model model)          { models.add(model);       }
 	 
-	 private List<String>  tags 	   = new ArrayList<String>();	
 	 public List<String> getAliases()	{ return aliases; }
 	 public List<String> getGenes()   { return genes; }
 	 public List<String>   getLinkedTags()      { return tags;     }
@@ -192,7 +192,7 @@ public class Disease implements Persistable, Serializable{
 	public void syncMongo() {
 		Document doc = null;		
 		
-			mongoAgent  = new PersistAgentMongoDB();
+			//mongoAgent  = new PersistAgentMongoDB();
 			doc = mongoAgent.getTDoc(getId(), DBType.MALA_CARDS);
 			if (doc != null) {
 				if (!doc.getString("summaries").equals("")) {

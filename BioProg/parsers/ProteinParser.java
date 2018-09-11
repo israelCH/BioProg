@@ -36,10 +36,10 @@ public class ProteinParser extends XMLparser {
 		}
 		
 		for(Element protein : proteinElements) 
-			_proteins.add(parseSingleArticle(protein));
+			_proteins.add(parseSingleProtein(protein));
 	}
 	
-	private Protein parseSingleArticle(Element proteinEl) {
+	private Protein parseSingleProtein(Element proteinEl) {
 		
 		Protein protein = new Protein();
 		Element elem = getChildByName(proteinEl, "Id");

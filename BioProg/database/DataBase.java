@@ -28,7 +28,7 @@ public class DataBase {
 	public DataBase (DBType dbType){
 		_dbType = dbType;
 	}
-	
+
 	public String getPath(){
 		if      (_dbType.equals(DBType.PUBMED))         {return "pubmed";}
 		else if (_dbType.equals(DBType.PUBMED_CENTRAL)) {return "pmc";   }

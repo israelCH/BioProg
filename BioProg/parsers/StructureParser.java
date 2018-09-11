@@ -37,10 +37,10 @@ public class StructureParser extends XMLparser {
 		}
 		
 		for(Element structureEl : structureElements) 
-			_pdbs.add(parseSingleArticle(structureEl));
+			_pdbs.add(parseSinglePdb(structureEl));
 	}
 	
-	private Structure parseSingleArticle(Element structureEl) {
+	private Structure parseSinglePdb(Element structureEl) {
 		
 		Structure structure = new Structure();
 		Element elem = getChildByName(structureEl, "Id");

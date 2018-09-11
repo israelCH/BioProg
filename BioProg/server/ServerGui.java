@@ -12,7 +12,7 @@ import java.awt.Font;
 public class ServerGui extends JFrame {
 
 	private JPanel contentPane;
-	private final JLabel lblNisayon = new JLabel("<html>Server BIOPROG is running...<br>close this window to stop server</html>");
+	private final JLabel lblNisayon = new JLabel("<html>Server BIO-MINER is running...<br>close this window to stop server</html>");
 
 	/**
 	 * Launch the application.

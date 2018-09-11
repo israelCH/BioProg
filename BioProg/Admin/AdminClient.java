@@ -46,7 +46,7 @@ import persistentdatabase.model.Structure;
 public class AdminClient {
 	
 	// path to local repository
-	final static String modelsPath = "/Users/Zorkd/Dropbox/1AFiles/NBEL/aneurysm/Models/";
+	//final static String modelsPath = "/Users/Zorkd/Dropbox/1AFiles/NBEL/aneurysm/Models/";
 	final static String logPath    = System.getProperty("user.dir");
 	
 	private static String ServerAddress;
