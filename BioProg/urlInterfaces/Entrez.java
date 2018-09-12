@@ -171,7 +171,7 @@ public class Entrez {
 				
 				if (!_terms.isEmpty()){
 					for (int i = 0; i < _terms.size() - 1; i++) {
-						queryStr += _terms.get(i) + "+%20+";
+						queryStr += _terms.get(i) + "+";
 					}
 					queryStr += _terms.get(_terms.size() - 1);
 				}

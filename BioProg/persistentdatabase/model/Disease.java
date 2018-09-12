@@ -32,7 +32,7 @@ public class Disease implements Persistable, Serializable{
 	private static String staticDrugs = "";
 	private static List<String> staticAliases;
 	private static int counter =0;
-	static PersistAgentMongoDB mongoAgent = null;
+	//static PersistAgentMongoDB mongoAgent = null;
 
 
 	@Id
@@ -189,7 +189,7 @@ public class Disease implements Persistable, Serializable{
 		  return result;
 	  }
 	
-	public void syncMongo() {
+	public void syncMongo(PersistAgentMongoDB mongoAgent) {
 		Document doc = null;		
 		
 			//mongoAgent  = new PersistAgentMongoDB();

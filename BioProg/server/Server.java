@@ -390,7 +390,7 @@ public class Server {
 			diseases = parserMala.getDiseases();
 			for(Disease dis: diseases){
 				dis.addTag(str);
-				dis.syncMongo();
+				dis.syncMongo(mongoAgent);
 			}
 			// בשמירה לא צריך כי כבר בחיפוש הראשוני שולפים הכל והמונגו לא מוסיף לנו כלום
 			return (List<T>) diseases;
